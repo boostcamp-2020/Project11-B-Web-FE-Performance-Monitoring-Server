@@ -1,0 +1,36 @@
+{
+  "name": "Project11-B-Web-FE-Performance-Monitoring-Server",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "lint": "eslint \"./**/*.{js,jsx,ts,tsx}\"",
+    "lint:fix": "eslint --fix \"./**/*.{ts,tsx}\"",
+    "prettier": "prettier --write --config \"./.prettierrc\" \"./**/*.{js,jsx,ts,tsx}\""
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/boostcamp-2020/Project11-B-Web-FE-Performance-Monitoring-Server.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/boostcamp-2020/Project11-B-Web-FE-Performance-Monitoring-Server/issues"
+  },
+  "homepage": "https://github.com/boostcamp-2020/Project11-B-Web-FE-Performance-Monitoring-Server#readme",
+  "devDependencies": {
+    "@typescript-eslint/eslint-plugin": "^4.8.0",
+    "@typescript-eslint/parser": "^4.8.0",
+    "eslint": "^7.13.0",
+    "eslint-config-airbnb-base": "^14.2.1",
+    "eslint-config-prettier": "^6.15.0",
+    "eslint-plugin-import": "^2.22.1",
+    "eslint-plugin-prettier": "^3.1.4",
+    "prettier": "^2.1.2"
+  },
+  "dependencies": {
+    "typescript": "^4.0.5"
+  }
+}
