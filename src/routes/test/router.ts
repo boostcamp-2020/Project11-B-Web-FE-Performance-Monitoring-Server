@@ -8,6 +8,8 @@ const router = new Router();
 router.get('/test', controllers.getTest);
 
 // post
+router.post('/test', controllers.addTest);
+
 // put
 // delete
 
