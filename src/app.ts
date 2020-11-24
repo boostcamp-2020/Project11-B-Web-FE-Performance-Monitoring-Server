@@ -6,7 +6,7 @@ import bodyParser from 'koa-bodyparser';
 import mongoose from 'mongoose';
 
 import apiRouter from './routes/index';
-import db from './models';
+import './models';
 import Test, { TestType, TestTypeModel } from './models/Test';
 
 const PORT = 3000;
@@ -16,8 +16,6 @@ const app = new Koa();
 app.use(json());
 app.use(logger());
 app.use(bodyParser());
-
-db.connect();
 
 app.use(apiRouter().routes());
 

@@ -7,9 +7,10 @@ const apiPrefix = '/api';
 
 const routing = () => {
   const routes = filenames(__dirname);
-  routes.map((route) => {
-    const subRouter = require(`./${route}/router.ts`);
-    router.use(`${apiPrefix}`, subRouter.routes());
+  routes.map(async (route) => {
+    const subRouter =await import(`./${route}/router.ts`); //import 함수에 대한 await
+    const subrouter =await subRouter.default(); // 내부 async 함수에대한 await
+    router.use(`${apiPrefix}`,  subrouter.routes());
   });
   return router;
 };
