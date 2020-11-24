@@ -8,10 +8,8 @@ export interface TestType {
 export interface TestTypeModel extends TestType, Document {}
 
 const testSchema = new Schema({
-  name: [
-    { firstName: String, lastName: String },
-    { type: String, required: true },
-  ],
+  name: { type: { firstName: String, lastName: String }, required: true },
+
   email: { type: String, required: true },
 });
 
