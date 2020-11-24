@@ -1,5 +1,5 @@
 import { Context, Next } from 'koa';
-import Issue, { IssueType, IssueTypeModel, build } from '../../../models/Issue';
+import { IssueType, IssueTypeModel, build } from '../../../models/Issue';
 
 const validateBody = (ctx: Context): IssueType => {
   const { name, issue } = ctx.request.body;
@@ -14,8 +14,7 @@ export default async (ctx: Context, next: Next) => {
   const newIssue: IssueType = validateBody(ctx);
   const newIssueDoc: IssueTypeModel = build(newIssue);
   await newIssueDoc.save();
-  const result = await Issue.find();
-  ctx.body = result;
+  ctx.response.status = 200;
 
   await next();
 };
