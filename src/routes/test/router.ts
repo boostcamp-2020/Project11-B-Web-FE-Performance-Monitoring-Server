@@ -1,16 +1,18 @@
 import Router from 'koa-router';
 
-const controllers = require('./controllers');
+import controllers from './controllers';
 
-const router = new Router();
+export default async () => {
+  const router = new Router();
+  const controll: any = await controllers();
 
-// get
-router.get('/test', controllers.getTest);
+  //   get
+  router.get('/test', controll.getTest);
 
-// post
-router.post('/test', controllers.addTest);
+  //   post
+  router.post('/test', controll.addTest);
 
-// put
-// delete
-
-module.exports = router;
+  //   put
+  //   delete
+  return router;
+};

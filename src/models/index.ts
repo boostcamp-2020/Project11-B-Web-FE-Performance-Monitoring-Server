@@ -11,5 +11,4 @@ const connect = async () => {
   });
   console.log('connected to database');
 };
-
-export default { connect };
+connect();
