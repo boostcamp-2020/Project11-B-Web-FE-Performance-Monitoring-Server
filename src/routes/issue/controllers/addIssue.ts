@@ -3,6 +3,9 @@ import Issue, { IssueType, IssueTypeModel, build } from '../../../models/Issue';
 
 const validateBody = (ctx: Context): IssueType => {
   const { name, issue } = ctx.request.body;
+  if (!(name && issue)) {
+    return ctx.throw(401, 'validation failed');
+  }
   const newIssue: IssueType = { name, issue };
   return newIssue;
 };

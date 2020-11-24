@@ -3,11 +3,9 @@ import Koa from 'koa';
 import logger from 'koa-logger';
 import json from 'koa-json';
 import bodyParser from 'koa-bodyparser';
-import mongoose from 'mongoose';
 
 import apiRouter from './routes/index';
 import './models';
-import Test, { TestType, TestTypeModel } from './models/Test';
 
 const PORT = 3000;
 
@@ -18,6 +16,18 @@ app.use(logger());
 app.use(bodyParser());
 
 app.use(apiRouter().routes());
+
+/**
+ * @TODO
+ * 에러 코드 분리
+ */
+app.on('error', (err, ctx) => {
+  // 에러 코드
+  console.log(err.status);
+  // 에러 메시지
+  console.log(err.message);
+  // console.log('server error', err, ctx);
+});
 
 app.listen(PORT, () => {
   console.log(`Koa server listening on port ${PORT}`);
