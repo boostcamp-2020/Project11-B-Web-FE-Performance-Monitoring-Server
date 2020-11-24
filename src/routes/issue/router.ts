@@ -15,5 +15,6 @@ export default async () => {
 
   //   put
   //   delete
+  router.delete('/issues', controll.cleanIssues);
   return router;
 };
