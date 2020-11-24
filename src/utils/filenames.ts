@@ -1,6 +1,6 @@
 import fs from 'fs';
 
-const filenames = (dir: string) => {
+const filenames = (dir: string): string[] => {
   const names: string[] = [];
   fs.readdirSync(dir).forEach((filename) => {
     if (filename.includes('index') || filename.includes('router')) {
