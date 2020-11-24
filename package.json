@@ -4,7 +4,8 @@
     "description": "",
     "main": "index.js",
     "scripts": {
-        "dev": "nodemon --exec ts-node src/index.ts",
+        "dev": "nodemon --exec ts-node src/app.ts",
+        "start": "ts-node src/app.ts",
         "test": "NODE_ENV=test jest",
         "lint": "eslint \"./**/*.{js,jsx,ts,tsx}\"",
         "lint:fix": "eslint --fix \"./**/*.{ts,tsx}\"",
@@ -23,7 +24,8 @@
     "homepage": "https://github.com/boostcamp-2020/Project11-B-Web-FE-Performance-Monitoring-Server#readme",
     "devDependencies": {
         "@types/koa": "^2.11.6",
-        "@types/node": "^14.14.8",
+        "@types/mongoose": "^5.10.1",
+        "@types/node": "^14.14.9",
         "@typescript-eslint/eslint-plugin": "^4.8.0",
         "@typescript-eslint/parser": "^4.8.0",
         "eslint": "^7.13.0",
@@ -38,10 +40,16 @@
     },
     "dependencies": {
         "@koa/router": "^10.0.0",
+        "@types/koa-bodyparser": "^4.3.0",
+        "@types/koa-json": "^2.0.18",
         "@types/koa-logger": "^3.1.1",
         "@types/koa-router": "^7.4.1",
+        "dotenv": "^8.2.0",
         "koa": "^2.13.0",
+        "koa-bodyparser": "^4.3.0",
+        "koa-json": "^2.0.2",
         "koa-logger": "^3.2.1",
-        "koa-router": "^10.0.0"
+        "koa-router": "^10.0.0",
+        "mongoose": "^5.10.15"
     }
 }
