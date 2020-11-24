@@ -9,7 +9,7 @@ export interface IssueType {
     version: string;
   };
   meta: {
-    broswer: {
+    browser: {
       name: string;
       version: string;
     };
@@ -40,7 +40,7 @@ const issueSchema = new Schema({
     version: { type: String, required: true },
   },
   meta: {
-    broswer: {
+    browser: {
       name: { type: String, required: true },
       version: { type: String, required: true },
     },
