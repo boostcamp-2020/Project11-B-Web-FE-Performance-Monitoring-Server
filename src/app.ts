@@ -3,6 +3,7 @@ import Koa from 'koa';
 import logger from 'koa-logger';
 import json from 'koa-json';
 import bodyParser from 'koa-bodyparser';
+import cors from '@koa/cors';
 
 import apiRouter from './routes/index';
 import './models';
@@ -14,6 +15,7 @@ const app = new Koa();
 app.use(json());
 app.use(logger());
 app.use(bodyParser());
+app.use(cors());
 
 app.use(apiRouter().routes());
 
