@@ -1,15 +1,56 @@
 import { Schema, Document, model } from 'mongoose';
 
 export interface IssueType {
-  name: string;
-  issue: Record<string, unknown>;
+  message: string;
+  stack: [{ columnNo: string; lineNo: string; function: string; filename: string }];
+  occuredAt: Date;
+  sdk: {
+    name: string;
+    version: string;
+  };
+  meta: {
+    broswer: {
+      name: string;
+      version: string;
+    };
+    os: {
+      name: string;
+      version: string;
+    };
+    url: string;
+    ip: string;
+  };
 }
 
 export interface IssueTypeModel extends IssueType, Document {}
 
 const issueSchema = new Schema({
-  name: { type: String, required: true },
-  issue: { type: Object, required: true },
+  message: { type: String, required: true },
+  stack: [
+    {
+      columnNo: { type: String, required: true },
+      lineNo: { type: String, required: true },
+      function: { type: String, required: true },
+      filename: { type: String, required: true },
+    },
+  ],
+  occuredAt: { type: Date, required: true },
+  sdk: {
+    name: { type: String, required: true },
+    version: { type: String, required: true },
+  },
+  meta: {
+    broswer: {
+      name: { type: String, required: true },
+      version: { type: String, required: true },
+    },
+    os: {
+      name: { type: String, required: true },
+      version: { type: String, required: true },
+    },
+    url: { type: String, required: true },
+    ip: { type: String, required: true },
+  },
 });
 
 const Issue = model<IssueTypeModel>('Issue', issueSchema);
