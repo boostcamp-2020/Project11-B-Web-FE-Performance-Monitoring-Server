@@ -7,10 +7,11 @@ export default async () => {
   const controll: any = await controllers();
 
   //   get
-  router.post('/issue', controll.addIssue);
+  router.get('/issues', controll.getIssues);
+  router.get('/issue/:issueId', controll.getIssue);
 
-  router.get('/issue', controll.addIssue);
   //   post
+  router.post('/issue', controll.addIssue);
 
   //   put
   //   delete
