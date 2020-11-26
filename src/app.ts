@@ -8,15 +8,17 @@ import cors from '@koa/cors';
 import apiRouter from './routes/index';
 import './models';
 
+require('dotenv').config();
+
 const PORT = 3000;
 
 const app = new Koa();
 
 app.use(json());
-app.use(logger());
 app.use(bodyParser());
 app.use(cors());
 
+if (process.env.NODE_ENV === 'development') app.use(logger());
 app.use(apiRouter().routes());
 
 /**
