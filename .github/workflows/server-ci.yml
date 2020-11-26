@@ -27,27 +27,3 @@ jobs:
         run: npm ci
       - name: Run lint
         run: npm run lint
-      - name: Configure SSH
-        run: |
-          mkdir -p ~/.ssh/
-          echo "$SSH_KEY" > ~/.ssh/develop.key
-          chmod 600 ~/.ssh/develop.key
-          cat >>~/.ssh/config <<END
-          Host develop
-            HostName $SSH_HOST
-            User $SSH_USER
-            IdentityFile ~/.ssh/develop.key
-            StrictHostKeyChecking no
-          END
-        env:
-          SSH_USER: ${{ secrets.DEV_USERNAME }}
-          SSH_KEY: ${{ secrets.DEV_PRIVATE_KEY }}
-          SSH_HOST: ${{ secrets.DEV_HOST }}
-
-      - name: Run Install & Build
-        run: ssh develop 'cd repos/Project11-B-Web-FE-Performance-Monitoring-Server && git checkout develop && git pull && npm i'
-
-      - name: Reload PM2
-        run: ssh develop 'pm2 reload pan-dev-server'
-#     - run: npm run build --if-present
-#     - run: npm test
