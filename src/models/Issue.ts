@@ -56,9 +56,8 @@ const issueSchema = new Schema({
   },
 });
 
-issueSchema.statics.build = (issue: IssueType): IssueDocument => {
-  // eslint-disable-next-line @typescript-eslint/no-use-before-define
-  return new Issue(issue);
+issueSchema.statics.build = function buildIssue(issue: IssueType): IssueDocument {
+  return new this(issue);
 };
 
 const Issue = model<IssueDocument, IssueModel>('Issue', issueSchema);
