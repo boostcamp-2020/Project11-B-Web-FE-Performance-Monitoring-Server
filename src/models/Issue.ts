@@ -1,4 +1,4 @@
-import { Schema, Document, model } from 'mongoose';
+import { Schema, Document, model, Model } from 'mongoose';
 
 export interface IssueType {
   message: string;
@@ -22,7 +22,10 @@ export interface IssueType {
   };
 }
 
-export interface IssueTypeModel extends IssueType, Document {}
+export interface IssueDocument extends IssueType, Document {}
+export interface IssueModel extends Model<IssueDocument> {
+  build(attr: IssueType): IssueDocument;
+}
 
 const issueSchema = new Schema({
   message: { type: String, required: true },
@@ -53,10 +56,11 @@ const issueSchema = new Schema({
   },
 });
 
-const Issue = model<IssueTypeModel>('Issue', issueSchema);
-
-export const build = (issue: IssueType): IssueTypeModel => {
+issueSchema.statics.build = (issue: IssueType): IssueDocument => {
+  // eslint-disable-next-line @typescript-eslint/no-use-before-define
   return new Issue(issue);
 };
+
+const Issue = model<IssueDocument, IssueModel>('Issue', issueSchema);
 
 export default Issue;
