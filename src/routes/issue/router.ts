@@ -15,12 +15,13 @@ export default async () => {
 
   //   put
 
-  //   delete
   /**
    * @WARNING
    * @개발용
    * 전체 데이터 삭제 API
    */
-  router.delete('/issues', controll.cleanIssues);
+  router.post('/dev/issues', controll.devAddIssues);
+  router.delete('/dev/issues', controll.devDeleteIssues);
+
   return router;
 };

@@ -2,7 +2,7 @@ import { Schema, Document, model } from 'mongoose';
 
 export interface IssueType {
   message: string;
-  stack: [{ columnNo: string; lineNo: string; function: string; filename: string }];
+  stack: { columnNo: string; lineNo: string; function: string; filename: string }[];
   occuredAt: Date;
   sdk: {
     name: string;
