@@ -1,11 +1,11 @@
 import { Context, Next } from 'koa';
-import { IssueType, IssueTypeModel, build } from '../../../models/Issue';
+import Issue, { IssueType, IssueDocument } from '../../../models/Issue';
 
-export default async (ctx: Context, next: Next) => {
+export default async (ctx: Context, next: Next): Promise<void> => {
   const newIssue: IssueType = ctx.request.body;
   newIssue.meta.ip = ctx.header.host;
   try {
-    const newIssueDoc: IssueTypeModel = build(newIssue);
+    const newIssueDoc: IssueDocument = Issue.build(newIssue);
     await newIssueDoc.save();
     ctx.response.status = 200;
   } catch (e) {
