@@ -1,9 +1,11 @@
 <p align="center">
     <img  align="center" src="https://i.imgur.com/ZV0QxMF.jpg" >
-    <h1>Panopticon</h1>
+    
 </p>
 
 <div align="center">
+    
+<h1>Panopticon</h1>
 
 ![TypeScript](https://img.shields.io/badge/TypeScript-v4.0.5-blue?logo=TypeScript) ![NodeJS](https://img.shields.io/badge/node.js-v14.5.1-green?logo=node.js) ![koa](https://img.shields.io/badge/KOA-4.16.1-yellow?logo=KoaJs) ![mongodb](https://img.shields.io/badge/MongoDB-v4.2.10-green?logo=mongodb) 
 
