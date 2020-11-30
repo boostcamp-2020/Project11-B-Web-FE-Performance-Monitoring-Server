@@ -1,6 +1,6 @@
 import { IssueType } from './Issue';
 
-const FIVE_MIN_MILLISEC = 5 * 60 * 1000;
+const HOUR_MILLISEC = 60 * 60 * 1000;
 
 const makeSampleIssueWithTime = (date: Date): IssueType => {
   const newSample = {
@@ -91,10 +91,15 @@ const makeSampleIssueWithTime = (date: Date): IssueType => {
 const makeDaySampleIssues = (): IssueType[] => {
   const issues: IssueType[] = [];
   const now = new Date();
-  for (let i = 0; i < 300; i += 1) {
-    const newDate = new Date(now.getTime() - FIVE_MIN_MILLISEC * i);
-    const newIssue: IssueType = makeSampleIssueWithTime(newDate);
-    issues.push(newIssue);
+  for (let i = 1; i <= 24; i += 1) {
+    const errorNumPerHour: number = Math.floor(Math.random() * 20) + 1;
+    for (let j = 0; j < errorNumPerHour; j += 1) {
+      const newDate = new Date(
+        now.getTime() - HOUR_MILLISEC * i + Math.floor(Math.random()) * HOUR_MILLISEC,
+      );
+      const newIssue: IssueType = makeSampleIssueWithTime(newDate);
+      issues.push(newIssue);
+    }
   }
   return issues;
 };
