@@ -47,13 +47,14 @@ const processGithubOAuth = async (code: string): Promise<UserDocument | null> =>
   const newUser: UserDocument | null = await insertUser(profile);
   return newUser;
 };
-const getToken = (newUser: UserDocument): string | undefined => {
+
+const getToken = (newUser: UserDocument, tokenExpiration: number): string | undefined => {
   // eslint-disable-next-line no-underscore-dangle
   const userId: string = newUser._id;
   const jwtSecret: string | undefined = process.env.JWT_SECRET;
   if (jwtSecret !== undefined) {
-    const accessToken = jwt.sign({ userId }, jwtSecret, { expiresIn: '1d' });
-    return accessToken;
+    const jwtToken = jwt.sign({ _id: userId }, jwtSecret, { expiresIn: tokenExpiration });
+    return jwtToken;
   }
   return undefined;
 };
