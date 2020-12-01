@@ -8,6 +8,7 @@ export default async (ctx: Context, next: Next): Promise<void> => {
     const newProjectDoc: ProjectDocument = Project.build(newProject);
     await newProjectDoc.save();
     ctx.response.status = 200;
+    ctx.body = { dsn: newProjectDoc.dsn };
   } catch (e) {
     ctx.throw(400, 'validation failed');
   }
