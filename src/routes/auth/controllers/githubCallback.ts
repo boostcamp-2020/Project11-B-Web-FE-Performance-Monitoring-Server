@@ -12,7 +12,7 @@ export default async (ctx: Context, next: Next): Promise<void> => {
   const newUser: UserDocument = (await processGithubOAuth(accessCode)) as UserDocument;
   const jwtToken: string | undefined = newUser ? getToken(newUser, tokenExpiration) : undefined;
   if (jwtToken) {
-    // ctx.cookies.set('nickname', newUser.nickname, { httpOnly: false, maxAge: tokenExpiration });
+    ctx.cookies.set('nickname', newUser.nickname, { httpOnly: false, maxAge: tokenExpiration });
     ctx.cookies.set('token', jwtToken, { httpOnly: false, maxAge: tokenExpiration });
     /**
      * @TODO
