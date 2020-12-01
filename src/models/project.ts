@@ -1,12 +1,10 @@
 import { Schema, Document, model, Model } from 'mongoose';
-import randomStr from '../utils/randomStr';
 
 export interface IProject {
   name: string;
   description?: string;
   owner: string;
-  dsn: string;
-  users?: string[];
+  users: string[];
 }
 
 export interface ProjectDocument extends IProject, Document {
@@ -27,9 +25,7 @@ const projectSchema = new Schema({
 });
 
 projectSchema.statics.build = function buildProject(project: IProject) {
-  const newProject = new this(project);
-  newProject.dsn = randomStr();
-  return newProject;
+  return new this(project);
 };
 
 projectSchema.methods.addUser = function addUser(userId: string) {
