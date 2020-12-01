@@ -2,6 +2,8 @@ import { Context, Next } from 'koa';
 import { UserDocument } from '../../../models/User';
 import { processGithubOAuth, getToken } from '../services/githubUtil';
 
+require('dotenv').config();
+
 const HOUR: number = 1000 * 60 * 60;
 const tokenExpiration: number = 3 * HOUR;
 
@@ -12,6 +14,6 @@ export default async (ctx: Context, next: Next): Promise<void> => {
   if (jwtToken) {
     ctx.cookies.set('token', jwtToken, { httpOnly: true, maxAge: tokenExpiration });
   }
-  ctx.redirect('http://localhost:3001');
+  ctx.redirect(process.env.ADMIN_MAIN_URL as string);
   await next();
 };
