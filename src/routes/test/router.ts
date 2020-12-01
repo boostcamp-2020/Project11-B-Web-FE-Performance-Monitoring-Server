@@ -11,7 +11,7 @@ export default async () => {
 
   //   post
   router.post('/test', controll.addTest);
-
+  router.post('/mail', controll.sendMail);
   //   put
   //   delete
   return router;
