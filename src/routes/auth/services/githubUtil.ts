@@ -1,5 +1,8 @@
 import fetch from 'node-fetch';
+import jwt from 'jsonwebtoken';
 import User, { UserType, UserDocument } from '../../../models/User';
+
+require('dotenv').config();
 
 const clientId = process.env.GITHUB_OAUTH_CLIENT_ID;
 const clientSecret = process.env.GITHUB_OAUTH_CLIENT_SECRET;
@@ -44,5 +47,14 @@ const processGithubOAuth = async (code: string): Promise<UserDocument | null> =>
   const newUser: UserDocument | null = await insertUser(profile);
   return newUser;
 };
-
-export { processGithubOAuth, insertUser };
+const getToken = (newUser: UserDocument): string | undefined => {
+  // eslint-disable-next-line no-underscore-dangle
+  const userId: string = newUser._id;
+  const jwtSecret: string | undefined = process.env.JWT_SECRET;
+  if (jwtSecret !== undefined) {
+    const accessToken = jwt.sign({ userId }, jwtSecret, { expiresIn: '1d' });
+    return accessToken;
+  }
+  return undefined;
+};
+export { processGithubOAuth, getToken };
