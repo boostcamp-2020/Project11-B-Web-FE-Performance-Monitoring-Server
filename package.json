@@ -41,14 +41,17 @@
   "dependencies": {
     "@koa/cors": "^3.1.0",
     "@koa/router": "^10.0.0",
+    "@types/crypto-js": "^4.0.1",
     "@types/jsonwebtoken": "^8.5.0",
     "@types/koa-bodyparser": "^4.3.0",
     "@types/koa-json": "^2.0.18",
     "@types/koa-logger": "^3.1.1",
     "@types/koa-router": "^7.4.1",
     "@types/koa__cors": "^3.0.2",
+    "@types/nodemailer": "^6.4.0",
     "@types/node-fetch": "^2.5.7",
     "cross-env": "^7.0.2",
+    "crypto-js": "^4.0.0",
     "dotenv": "^8.2.0",
     "jsonwebtoken": "^8.5.1",
     "koa": "^2.13.0",
@@ -57,6 +60,7 @@
     "koa-logger": "^3.2.1",
     "koa-router": "^10.0.0",
     "mongoose": "^5.10.15",
+    "nodemailer": "^6.4.16",
     "node-fetch": "^2.6.1"
   }
 }
