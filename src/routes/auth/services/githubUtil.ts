@@ -2,9 +2,6 @@ import fetch from 'node-fetch';
 import jwt from 'jsonwebtoken';
 import User, { UserType, UserDocument } from '../../../models/User';
 
-const clientId: string = process.env.GITHUB_OAUTH_CLIENT_ID as string;
-const clientSecret: string = process.env.GITHUB_OAUTH_CLIENT_SECRET as string;
-
 const insertUser = async (profile: any): Promise<UserDocument | null> => {
   const newUser: UserType = {
     uid: profile.id,
@@ -23,7 +20,7 @@ const insertUser = async (profile: any): Promise<UserDocument | null> => {
 
 const processGithubOAuth = async (code: string): Promise<UserDocument | null> => {
   const accessResponse = await fetch(
-    `https://github.com/login/oauth/access_token?client_id=${clientId}&client_secret=${clientSecret}&code=${code}`,
+    `https://github.com/login/oauth/access_token?client_id=${process.env.GITHUB_OAUTH_CLIENT_ID}&client_secret=${process.env.GITHUB_OAUTH_CLIENT_SECRET}&code=${code}`,
     {
       method: 'POST',
       headers: {
