@@ -10,7 +10,7 @@ import './models';
 
 require('dotenv').config();
 
-const PORT = 3000;
+const PORT = process.env.PORT || 4000;
 
 const app = new Koa();
 
@@ -35,4 +35,5 @@ app.on('error', (err, ctx) => {
 
 app.listen(PORT, () => {
   console.log(`Koa server listening on port ${PORT}`);
+  console.log(`NODE_ENV : ${process.env.NODE_ENV}`);
 });
