@@ -7,7 +7,7 @@ export default async (): Promise<Record<string, unknown>> => {
   const controll: any = await controllers();
 
   //   post
-  router.post('/project', controll.createProject);
+  router.post('/project', controll.addProject);
 
   return router;
 };
