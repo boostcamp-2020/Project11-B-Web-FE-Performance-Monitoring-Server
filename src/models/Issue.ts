@@ -1,5 +1,5 @@
 import { Schema, Document, model, Model } from 'mongoose';
-// message, stack, type이 같은 경우 동일 에러 종류로 분류
+
 export interface IIssueType {
   message: string;
   type: string;
@@ -16,7 +16,9 @@ export interface IIssueModel extends Model<IIssueDocument> {
 }
 
 const issueSchema = new Schema({
-  issueId: { type: String, required: true },
+  message: String,
+  type: String,
+  stack: { type: Schema.Types.Array, required: true },
   errorIds: { type: Schema.Types.Array, required: true },
 });
 
