@@ -10,7 +10,7 @@ import './models';
 
 require('dotenv').config();
 
-const PORT = 3000;
+const PORT = process.env.PORT || 4000;
 
 const app = new Koa();
 
