@@ -4,10 +4,13 @@ import { processGithubOAuth, getToken } from '../services/githubUtil';
 
 const HOUR: number = 1000 * 60 * 60;
 const tokenExpiration: number = 3 * HOUR;
-
+const redirectURL: string =
+  process.env.NODE_ENV === 'development'
+    ? (process.env.ADMIN_MAIN_URL_DEV as string)
+    : (process.env.ADMIN_MAIN_URL as string);
 export default async (ctx: Context, next: Next): Promise<void> => {
   if (ctx.query.error) {
-    ctx.redirect(process.env.ADMIN_MAIN_URL as string);
+    ctx.redirect(redirectURL);
     await next();
     return;
   }
@@ -22,6 +25,6 @@ export default async (ctx: Context, next: Next): Promise<void> => {
      * http only option
      */
   }
-  ctx.redirect(process.env.ADMIN_MAIN_URL as string);
+  ctx.redirect(redirectURL);
   await next();
 };

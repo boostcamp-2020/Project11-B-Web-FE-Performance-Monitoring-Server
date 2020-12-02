@@ -22,7 +22,15 @@ const insertUser = async (profile: IProfile): Promise<UserDocument | null> => {
 
 const processGithubOAuth = async (code: string): Promise<UserDocument | null> => {
   const accessResponse = await fetch(
-    `https://github.com/login/oauth/access_token?client_id=${process.env.GITHUB_OAUTH_CLIENT_ID}&client_secret=${process.env.GITHUB_OAUTH_CLIENT_SECRET}&code=${code}`,
+    `https://github.com/login/oauth/access_token?client_id=${
+      process.env.NODE_ENV === 'development'
+        ? process.env.GITHUB_OAUTH_CLIENT_ID_DEV
+        : process.env.GITHUB_OAUTH_CLIENT_ID
+    }&client_secret=${
+      process.env.NODE_ENV === 'development'
+        ? process.env.GITHUB_OAUTH_CLIENT_SECRET_DEV
+        : process.env.GITHUB_OAUTH_CLIENT_SECRET
+    }&code=${code}`,
     {
       method: 'POST',
       headers: {
