@@ -2,7 +2,13 @@ import fetch from 'node-fetch';
 import jwt from 'jsonwebtoken';
 import User, { UserType, UserDocument } from '../../../models/User';
 
-const insertUser = async (profile: any): Promise<UserDocument | null> => {
+interface IProfile {
+  login: string;
+  id: number;
+  email: string;
+}
+
+const insertUser = async (profile: IProfile): Promise<UserDocument | null> => {
   const newUser: UserType = {
     uid: profile.id,
     nickname: profile.login,
@@ -38,7 +44,7 @@ const processGithubOAuth = async (code: string): Promise<UserDocument | null> =>
       accept: 'application/json',
     },
   });
-  const profile: any = await profileResponse.json();
+  const profile: IProfile = await profileResponse.json();
   const newUser: UserDocument | null = await insertUser(profile);
   return newUser;
 };

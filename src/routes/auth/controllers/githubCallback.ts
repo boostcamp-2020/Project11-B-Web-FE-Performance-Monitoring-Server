@@ -6,7 +6,7 @@ const HOUR: number = 1000 * 60 * 60;
 const tokenExpiration: number = 3 * HOUR;
 
 export default async (ctx: Context, next: Next): Promise<void> => {
-  if (ctx.query) {
+  if (ctx.query.error) {
     ctx.redirect(process.env.ADMIN_MAIN_URL as string);
     await next();
     return;
