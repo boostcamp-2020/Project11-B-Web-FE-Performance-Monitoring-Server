@@ -1,11 +1,11 @@
 import { Context, Next } from 'koa';
-import Issue, { IssueDocument } from '../../../models/Issue';
+import Issue, { IIssueDocument } from '../../../models/Issue';
 
 const CONTENT_PER_PAGE = 20;
 
 export default async (ctx: Context, next: Next): Promise<void> => {
   const page: number = parseInt(ctx.query.page, 10) || 1;
-  const [result]: IssueDocument[] = await Issue.aggregate([
+  const [result]: IIssueDocument[] = await Issue.aggregate([
     { $addFields: { stack: { $arrayElemAt: ['$stack', 0] } } },
     {
       $sort: {

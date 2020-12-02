@@ -1,5 +1,5 @@
 import { Context, Next } from 'koa';
-import Issue, { IssueDocument } from '../../../models/Issue';
+import Issue, { IIssueDocument } from '../../../models/Issue';
 import { getPeriodByMillisec, getDefaultInterval, getStatsAggregate } from '../services/statUtil';
 
 interface StatQuery {
@@ -17,7 +17,7 @@ export default async (ctx: Context, next: Next): Promise<void> => {
   const start: Date = params.start ? new Date(params.start) : new Date(Date.now() - period); // 현재 - 구할 시간
   const end: Date = params.end ? new Date(params.end) : new Date();
 
-  const result: IssueDocument[] = await Issue.aggregate(getStatsAggregate(interval, start, end));
+  const result: IIssueDocument[] = await Issue.aggregate(getStatsAggregate(interval, start, end));
   ctx.body = result;
 
   await next();
