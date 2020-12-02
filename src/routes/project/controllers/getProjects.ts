@@ -1,36 +1,39 @@
 import { Context } from 'koa';
 import { Types } from 'mongoose';
-import Project from '../../../models/project';
+import Project from '../../../models/Project';
+import User from '../../../models/User';
 
-enum UserType {
+enum UserEnum {
   OWNER = 'owner',
   MEMBER = 'member',
   ALL = 'all',
 }
 
 interface IQuery {
-  userType: UserType;
+  userType: UserEnum;
 }
+
+interface IState {
+  user: { _id: string };
+}
+
 export default async (ctx: Context): Promise<void> => {
-  const { userType = UserType.ALL }: IQuery = ctx.query;
-  const user = {
-    id: '5fc055d7d58baa2b2807974b',
-    projects: [
-      { _id: '5fc6026191611635d8983356' },
-      { _id: '5fc6026191611635d8983358' },
-      { _id: '5fc6026191611635d898335a' },
-    ],
-  };
+  const { userType = UserEnum.ALL }: IQuery = ctx.query;
+  const { user } = ctx.state as IState;
+  const userDocument = await User.findOne({ _id: user._id });
+  if (!userDocument) {
+    return;
+  }
   try {
     let projects = await Project.find()
       .where('_id')
-      .in(user.projects.map((project) => Types.ObjectId(project._id)));
-    if (userType === UserType.OWNER) {
-      projects = projects.filter(({ owner }) => owner === user.id);
+      .in(userDocument.projects.map((projectId: string) => Types.ObjectId(projectId)));
+    if (userType === UserEnum.OWNER) {
+      projects = projects.filter(({ owner }) => owner === userDocument._id);
     }
-    if (userType === UserType.MEMBER) {
+    if (userType === UserEnum.MEMBER) {
       projects = projects.filter(({ users }) => {
-        return !!users.find((id) => id === user.id);
+        return !!users.find((userId) => userId === userDocument._id);
       });
     }
     ctx.response.status = 200;
