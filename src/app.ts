@@ -35,4 +35,5 @@ app.on('error', (err, ctx) => {
 
 app.listen(PORT, () => {
   console.log(`Koa server listening on port ${PORT}`);
+  console.log(`NODE_ENV : ${process.env.NODE_ENV}`);
 });
