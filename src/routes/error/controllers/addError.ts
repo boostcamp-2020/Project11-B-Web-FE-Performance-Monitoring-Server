@@ -6,8 +6,6 @@ export default async (ctx: Context, next: Next): Promise<void> => {
   const newError: IErrorType = ctx.request.body;
   newError.meta.ip = ctx.header.host;
   try {
-    // console.log(newError);
-
     const newErrorDoc: IErrorDocument = Error.build(newError);
     const res = await newErrorDoc.save();
     await Issue.findOneAndUpdate(
