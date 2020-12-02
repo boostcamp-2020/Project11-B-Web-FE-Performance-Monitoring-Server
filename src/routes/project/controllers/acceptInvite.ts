@@ -17,7 +17,6 @@ export default async (ctx: Context, next: Next): Promise<void> => {
      * project에서projectId를 통해 찾아온 후 project에 user추가
      */
   } else {
-    console.log('err');
     ctx.redirect('/');
   }
   await next();
