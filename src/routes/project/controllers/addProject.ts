@@ -1,5 +1,5 @@
 import { Context } from 'koa';
-import Project, { IProject, ProjectDocument } from '../../../models/project';
+import Project, { IProject, ProjectDocument } from '../../../models/Project';
 
 interface IBody {
   name: string;
