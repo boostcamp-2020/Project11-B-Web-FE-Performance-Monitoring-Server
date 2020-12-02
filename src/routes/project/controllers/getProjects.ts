@@ -33,7 +33,7 @@ export default async (ctx: Context): Promise<void> => {
     }
     if (userType === UserEnum.MEMBER) {
       projects = projects.filter(({ users }) => {
-        return !!users.find((userId) => userId === userDocument._id);
+        return users.some((userId) => userId === user._id);
       });
     }
     ctx.response.status = 200;
