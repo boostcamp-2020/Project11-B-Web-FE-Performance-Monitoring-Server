@@ -20,7 +20,6 @@ const projectSchema = new Schema({
   name: { type: String, required: true },
   description: { type: String },
   owner: { type: Schema.Types.ObjectId, required: true },
-  dsn: { type: String, required: true },
   users: { type: Schema.Types.Array, required: true },
 });
 
