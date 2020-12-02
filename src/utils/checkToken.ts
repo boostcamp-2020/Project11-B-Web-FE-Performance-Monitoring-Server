@@ -1,9 +1,7 @@
 import jwt from 'jsonwebtoken';
 
-require('dotenv').config();
-
 const checkToken = (jwtToken: string): string | undefined => {
-  const jwtSecret: string | undefined = process.env.JWT_SECRET;
+  const jwtSecret: string = process.env.JWT_SECRET as string;
   if (jwtSecret !== undefined) {
     const userId: any = jwt.verify(jwtToken, jwtSecret);
     // eslint-disable-next-line no-underscore-dangle
