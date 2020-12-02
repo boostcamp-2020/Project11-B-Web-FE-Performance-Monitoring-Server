@@ -1,22 +1,18 @@
 import fetch from 'node-fetch';
 import jwt from 'jsonwebtoken';
-import User, { UserType, UserDocument } from '../../../models/User';
+import User, { UserDocument } from '../../../models/User';
 
 interface IProfile {
-  login: string;
   id: number;
+  login: string;
   email: string;
 }
 
 const insertUser = async (profile: IProfile): Promise<UserDocument | null> => {
-  const newUser: UserType = {
-    uid: profile.id,
-    nickname: profile.login,
-    email: profile.email,
-  };
+  const { id: uid, login: nickname, email }: IProfile = profile;
   const result = await User.findOneAndUpdate(
-    { uid: newUser.uid },
-    { $setOnInsert: newUser },
+    { uid },
+    { $setOnInsert: { uid, nickname, email } },
     {
       upsert: true,
     },
