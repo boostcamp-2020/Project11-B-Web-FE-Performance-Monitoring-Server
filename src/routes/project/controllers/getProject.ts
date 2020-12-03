@@ -9,9 +9,7 @@ interface IQuery {
 export default async (ctx: Context): Promise<void> => {
   const { id: projectId }: IQuery = ctx.params;
   try {
-    const project = (await Project.findById(projectId)) as IProjectDocument;
-    const users = await User.find().where('_id').in(project.users).exec();
-    project.users = users.map((user) => user.toObject());
+    const project = await Project.findById(projectId).populate('users').exec();
     ctx.body = project;
   } catch (e) {
     ctx.throw(500);
