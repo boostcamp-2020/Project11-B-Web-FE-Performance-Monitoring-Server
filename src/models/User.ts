@@ -7,7 +7,10 @@ export interface IUser {
   projects: string[];
 }
 
-export interface UserDocument extends IUser, Document {}
+export interface UserDocument extends IUser, Document {
+  addProject(projectId: string): void;
+  deleteProject(projectId: string): void;
+}
 export interface UserModel extends Model<UserDocument> {
   build(attr: IUser): UserDocument;
 }
@@ -16,7 +19,10 @@ const userSchema = new Schema({
   uid: { type: Number, required: true },
   nickname: { type: String, required: true },
   email: { type: String },
-  projects: { type: Schema.Types.Array, required: true, default: [] },
+  projects: {
+    type: [{ type: Schema.Types.ObjectId, required: true, ref: 'Project' }],
+    default: [],
+  },
 });
 
 userSchema.statics.build = function buildUser(user: IUser): UserDocument {

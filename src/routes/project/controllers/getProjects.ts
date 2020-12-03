@@ -21,9 +21,7 @@ export default async (ctx: Context): Promise<void> => {
   const { userType = UserEnum.ALL }: IQuery = ctx.query;
   const { user } = ctx.state as IState;
   const userDocument = await User.findOne({ _id: user._id });
-  if (!userDocument) {
-    return;
-  }
+  if (!userDocument) ctx.throw(404, 'user not found');
   try {
     let projects = await Project.find()
       .populate('owner')
