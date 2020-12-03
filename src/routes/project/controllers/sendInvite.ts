@@ -6,12 +6,12 @@ import inviteMemberTemplate from '../../../utils/mailTemplate/inviteMember';
 import Invite, { InviteType, InviteDocument } from '../../../models/Invite';
 
 export default async (ctx: Context, next: Next): Promise<void> => {
-  const { to, project } = ctx.request.body;
+  const { to, project, projectId } = ctx.request.body;
   const info: any[] = [];
   await to.forEach(async (email: string) => {
     const json = {
       email,
-      project,
+      projectId,
     };
     const ciphertext = CryptoJS.AES.encrypt(
       JSON.stringify(json),
