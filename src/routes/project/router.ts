@@ -16,5 +16,8 @@ export default async (): Promise<Record<string, unknown>> => {
   router.post('/project/name/:id', controll.updateProjectName);
   router.post('/invite', controll.sendInvite);
 
+  // delete
+  router.delete('/project/:id/users', controll.deleteProjectUsers);
+
   return router;
 };
