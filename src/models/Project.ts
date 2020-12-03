@@ -1,4 +1,4 @@
-import { Schema, Document, model, Model } from 'mongoose';
+import { Types, Schema, Document, model, Model } from 'mongoose';
 
 export interface IProject {
   name: string;
@@ -37,7 +37,7 @@ projectSchema.methods.deleteUser = function deleteUser(userId: string) {
 };
 
 projectSchema.methods.deleteUsers = function deleteUser(userIds: string[]) {
-  userIds.forEach((userId) => this.users.pull(userId));
+  userIds.forEach(async (userId) => this.users.pull(Types.ObjectId(userId)));
 };
 
 const Project = model<IProjectDocument, IProjectModel>('Project', projectSchema);

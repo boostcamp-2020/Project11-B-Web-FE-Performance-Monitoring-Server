@@ -1,5 +1,5 @@
 import { Context } from 'koa';
-import Project, { IProjectDocument } from '../../../models/Project';
+import Project from '../../../models/Project';
 
 interface IQuery {
   id: number;
@@ -13,9 +13,12 @@ export default async (ctx: Context): Promise<void> => {
   const { id: projectId }: IQuery = ctx.params;
   const { userIds }: IBody = ctx.request.body;
   try {
-    const project = (await Project.findOne({ _id: projectId })) as IProjectDocument;
-    await project.deleteUsers(userIds);
-    await project.save();
+    const project = await Project.findOne({ _id: projectId });
+    if (project === null) {
+      ctx.throw(500);
+    }
+    project.deleteUsers(userIds);
+    project.save();
   } catch (e) {
     ctx.throw(400, 'internal server error');
   }
