@@ -1,9 +1,9 @@
 import { Context, Next } from 'koa';
-import Error, { IErrorType, IErrorDocument } from '../../../models/Error';
+import Error, { IError, IErrorDocument } from '../../../models/Error';
 import Issue from '../../../models/Issue';
 // message, stack, type이 같은 경우 동일 에러 종류로 분류
 export default async (ctx: Context, next: Next): Promise<void> => {
-  const newError: IErrorType = ctx.request.body;
+  const newError: IError = ctx.request.body;
   newError.meta.ip = ctx.header.host;
   try {
     const newErrorDoc: IErrorDocument = Error.build(newError);

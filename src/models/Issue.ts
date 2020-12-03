@@ -1,18 +1,18 @@
 import { Schema, Document, model, Model } from 'mongoose';
 
-export interface IIssueType {
+export interface IIssue {
   message: string;
   type: string;
   stack: { columnNo: string; lineNo: string; function: string; filename: string }[];
   errorIds: string[];
 }
 
-export interface IIssueDocument extends IIssueType, Document {
+export interface IIssueDocument extends IIssue, Document {
   addError(error: string): Promise<void>;
   deleteError(error: string): Promise<void>;
 }
 export interface IIssueModel extends Model<IIssueDocument> {
-  build(attr: IIssueType): IIssueDocument;
+  build(attr: IIssue): IIssueDocument;
 }
 
 const issueSchema = new Schema({
@@ -22,7 +22,7 @@ const issueSchema = new Schema({
   errorIds: { type: Schema.Types.Array, required: true },
 });
 
-issueSchema.statics.build = function buildIssue(issue: IIssueType): IIssueDocument {
+issueSchema.statics.build = function buildIssue(issue: IIssue): IIssueDocument {
   return new this(issue);
 };
 

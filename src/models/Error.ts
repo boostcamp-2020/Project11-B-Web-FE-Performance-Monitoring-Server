@@ -1,6 +1,6 @@
 import { Schema, Document, model, Model } from 'mongoose';
 
-export interface IErrorType {
+export interface IError {
   message: string;
   type: string;
   stack: { columnNo: string; lineNo: string; function: string; filename: string }[];
@@ -23,9 +23,9 @@ export interface IErrorType {
   };
 }
 
-export interface IErrorDocument extends IErrorType, Document {}
+export interface IErrorDocument extends IError, Document {}
 export interface IErrorModel extends Model<IErrorDocument> {
-  build(attr: IErrorType): IErrorDocument;
+  build(attr: IError): IErrorDocument;
 }
 
 const ErrorSchema = new Schema({
@@ -58,7 +58,7 @@ const ErrorSchema = new Schema({
   },
 });
 
-ErrorSchema.statics.build = function buildError(Error: IErrorType): IErrorDocument {
+ErrorSchema.statics.build = function buildError(Error: IError): IErrorDocument {
   return new this(Error);
 };
 
