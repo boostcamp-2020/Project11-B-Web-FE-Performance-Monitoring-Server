@@ -13,6 +13,7 @@ export default async (): Promise<Record<string, unknown>> => {
 
   // post
   router.post('/project', controll.addProject);
+  router.post('/project/name/:id', controll.updateProjectName);
   router.post('/invite', controll.sendInvite);
 
   return router;
