@@ -19,8 +19,8 @@ export default async (ctx: Context): Promise<void> => {
     }
     project.deleteUsers(userIds);
     project.save();
+    ctx.status = 200;
   } catch (e) {
     ctx.throw(400, 'internal server error');
   }
-  ctx.status = 200;
 };

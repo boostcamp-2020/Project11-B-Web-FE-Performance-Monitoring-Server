@@ -13,12 +13,14 @@ export default async (): Promise<Record<string, unknown>> => {
 
   // post
   router.post('/project', controll.addProject);
-  router.post('/project/name/:id', controll.updateProjectName);
   router.post('/invite', controll.sendInvite);
+
+  // put
+  router.put('/project/name/:id', controll.updateProjectName);
+  router.put('/project/:id/users', controll.deleteProjectUsers);
 
   // delete
   router.delete('/project/:id', controll.deleteProject);
-  router.delete('/project/:id/users', controll.deleteProjectUsers);
 
   return router;
 };
