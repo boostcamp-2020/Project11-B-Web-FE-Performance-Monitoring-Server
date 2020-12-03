@@ -1,6 +1,6 @@
 import { Context } from 'koa';
-import User, { UserDocument } from '../../../models/User';
-import Project, { IProject, ProjectDocument } from '../../../models/Project';
+import User, { IUserDocument } from '../../../models/User';
+import Project, { IProject, IProjectDocument } from '../../../models/Project';
 
 interface IBody {
   name: string;
@@ -9,7 +9,7 @@ interface IBody {
 
 export default async (ctx: Context): Promise<void> => {
   const req: IBody = ctx.request.body;
-  const user: UserDocument | null = await User.findOne({ _id: ctx.state.user._id });
+  const user: IUserDocument | null = await User.findOne({ _id: ctx.state.user._id });
   if (!user) ctx.throw(404, 'user not found');
   const newProject: IProject = {
     ...req,
@@ -17,7 +17,7 @@ export default async (ctx: Context): Promise<void> => {
     users: [],
   };
   try {
-    const newProjectDoc: ProjectDocument = Project.build(newProject);
+    const newProjectDoc: IProjectDocument = Project.build(newProject);
     await newProjectDoc.save();
     user.addProject(newProjectDoc._id);
     await user.save();

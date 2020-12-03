@@ -7,13 +7,13 @@ export interface IProject {
   users: string[];
 }
 
-export interface ProjectDocument extends IProject, Document {
+export interface IProjectDocument extends IProject, Document {
   addUser(user: string): Promise<void>;
   deleteUser(user: string): Promise<void>;
 }
 
-export interface ProjectModel extends Model<ProjectDocument> {
-  build(attr: IProject): ProjectDocument;
+export interface IProjectModel extends Model<IProjectDocument> {
+  build(attr: IProject): IProjectDocument;
 }
 
 const projectSchema = new Schema({
@@ -34,5 +34,5 @@ projectSchema.methods.addUser = function addUser(userId: string) {
 projectSchema.methods.deleteUser = function deleteUser(userId: string) {
   this.users.pull(userId);
 };
-const Project = model<ProjectDocument, ProjectModel>('Project', projectSchema);
+const Project = model<IProjectDocument, IProjectModel>('Project', projectSchema);
 export default Project;
