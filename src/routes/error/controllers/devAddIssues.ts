@@ -1,6 +1,6 @@
 import { Context, Next } from 'koa';
 import Issue from '../../../models/Issue';
-import makeDaySampleIssues from '../../../models/sampleIssues';
+import makeDaySampleIssues from '../../../models/sampleErrors';
 
 /**
  * @WARNING

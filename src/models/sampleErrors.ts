@@ -1,8 +1,8 @@
-import { IssueType } from './Issue';
+import { IErrorType } from './Error';
 
 const HOUR_MILLISEC = 60 * 60 * 1000;
 
-const makeSampleIssueWithTime = (date: Date): IssueType => {
+const makeSampleIssueWithTime = (date: Date): IErrorType => {
   const newSample = {
     sdk: {
       name: 'pan-opt',
@@ -21,6 +21,7 @@ const makeSampleIssueWithTime = (date: Date): IssueType => {
       ip: 'localhost:3000',
     },
     message: 'error maker made this',
+    type: 'sample type',
     stack: [
       {
         columnNo: '9',
@@ -88,8 +89,8 @@ const makeSampleIssueWithTime = (date: Date): IssueType => {
   return newSample;
 };
 
-const makeDaySampleIssues = (): IssueType[] => {
-  const issues: IssueType[] = [];
+const makeDaySampleIssues = (): IErrorType[] => {
+  const issues: IErrorType[] = [];
   const now = new Date();
   for (let i = 1; i <= 24; i += 1) {
     const errorNumPerHour: number = Math.floor(Math.random() * 20) + 1;
@@ -97,7 +98,7 @@ const makeDaySampleIssues = (): IssueType[] => {
       const newDate = new Date(
         now.getTime() - HOUR_MILLISEC * i + Math.floor(Math.random()) * HOUR_MILLISEC,
       );
-      const newIssue: IssueType = makeSampleIssueWithTime(newDate);
+      const newIssue: IErrorType = makeSampleIssueWithTime(newDate);
       issues.push(newIssue);
     }
   }
