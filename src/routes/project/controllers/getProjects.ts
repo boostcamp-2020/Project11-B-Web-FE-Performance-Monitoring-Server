@@ -26,6 +26,8 @@ export default async (ctx: Context): Promise<void> => {
   }
   try {
     let projects = await Project.find()
+      .populate('owner')
+      .populate('users')
       .where('_id')
       .in(userDocument.projects.map((projectId: string) => Types.ObjectId(projectId)));
     if (userType === UserEnum.OWNER) {
