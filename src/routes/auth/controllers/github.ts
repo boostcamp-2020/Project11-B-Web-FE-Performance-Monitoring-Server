@@ -1,5 +1,5 @@
 import { Context, Next } from 'koa';
-import { UserDocument } from '../../../models/User';
+import { IUserDocument } from '../../../models/User';
 import { processGithubOAuth, getToken } from '../services/githubUtil';
 
 const HOUR: number = 1000 * 60 * 60;
@@ -7,7 +7,7 @@ const tokenExpiration: number = 3 * HOUR;
 
 export default async (ctx: Context, next: Next): Promise<void> => {
   const { code } = ctx.query;
-  const newUser: UserDocument | null = await processGithubOAuth(code);
+  const newUser: IUserDocument | null = await processGithubOAuth(code);
   if (!newUser) {
     ctx.throw(401, 'unauthorized');
   }
