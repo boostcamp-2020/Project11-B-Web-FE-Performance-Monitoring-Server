@@ -1,4 +1,4 @@
-import { Schema, Document, model, Model } from 'mongoose';
+import { Types, Schema, Document, model, Model } from 'mongoose';
 
 export interface IProject {
   name: string;
@@ -10,6 +10,7 @@ export interface IProject {
 export interface IProjectDocument extends IProject, Document {
   addUser(user: string): Promise<void>;
   deleteUser(user: string): Promise<void>;
+  deleteUsers(userIds: string[]): Promise<void>;
 }
 
 export interface IProjectModel extends Model<IProjectDocument> {
@@ -34,5 +35,10 @@ projectSchema.methods.addUser = function addUser(userId: string) {
 projectSchema.methods.deleteUser = function deleteUser(userId: string) {
   this.users.pull(userId);
 };
+
+projectSchema.methods.deleteUsers = function deleteUser(userIds: string[]) {
+  userIds.forEach(async (userId) => this.users.pull(Types.ObjectId(userId)));
+};
+
 const Project = model<IProjectDocument, IProjectModel>('Project', projectSchema);
 export default Project;
