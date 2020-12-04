@@ -2,7 +2,11 @@ import { Context, Next } from 'koa';
 import checkToken from './checkToken';
 
 const authMiddleware = async (ctx: Context, next: Next): Promise<void> => {
-  if (/\/api\/auth\/github/g.test(ctx.url)) {
+  const whiteUrls = ['/api/error'];
+  if (
+    /\/api\/auth\/github/g.test(ctx.url) ||
+    whiteUrls.some((url) => ctx.originalUrl.includes(url))
+  ) {
     await next();
     return;
   }
