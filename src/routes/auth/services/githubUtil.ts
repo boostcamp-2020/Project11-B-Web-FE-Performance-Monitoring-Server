@@ -1,6 +1,6 @@
 import fetch from 'node-fetch';
 import jwt from 'jsonwebtoken';
-import User, { UserDocument } from '../../../models/User';
+import User, { IUserDocument } from '../../../models/User';
 
 interface IProfile {
   id: number;
@@ -8,7 +8,7 @@ interface IProfile {
   email: string;
 }
 
-const insertUser = async (profile: IProfile): Promise<UserDocument | null> => {
+const insertUser = async (profile: IProfile): Promise<IUserDocument | null> => {
   const { id: uid, login: nickname, email }: IProfile = profile;
   const result = await User.findOneAndUpdate(
     { uid },
@@ -20,7 +20,7 @@ const insertUser = async (profile: IProfile): Promise<UserDocument | null> => {
   return result;
 };
 
-const processGithubOAuth = async (code: string): Promise<UserDocument | null> => {
+const processGithubOAuth = async (code: string): Promise<IUserDocument | null> => {
   const accessResponse = await fetch(
     `https://github.com/login/oauth/access_token?client_id=${
       process.env.NODE_ENV === 'development'
@@ -49,11 +49,11 @@ const processGithubOAuth = async (code: string): Promise<UserDocument | null> =>
     },
   });
   const profile: IProfile = await profileResponse.json();
-  const newUser: UserDocument | null = await insertUser(profile);
+  const newUser: IUserDocument | null = await insertUser(profile);
   return newUser;
 };
 
-const getToken = (newUser: UserDocument, tokenExpiration: number): string => {
+const getToken = (newUser: IUserDocument, tokenExpiration: number): string => {
   // eslint-disable-next-line no-underscore-dangle
   const userId: string = newUser._id;
   const jwtSecret: string = process.env.JWT_SECRET as string;
