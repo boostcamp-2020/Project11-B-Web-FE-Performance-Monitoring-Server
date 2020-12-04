@@ -40,6 +40,7 @@ const processGithubOAuth = async (code: string): Promise<IUserDocument | null> =
   );
 
   const accessResponseBody = await accessResponse.json();
+  if (accessResponseBody.error) return null;
   const accessToken = accessResponseBody.access_token;
 
   const profileResponse = await fetch('https://api.github.com/user', {

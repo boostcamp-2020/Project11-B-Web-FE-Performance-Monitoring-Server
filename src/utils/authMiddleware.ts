@@ -11,7 +11,7 @@ const authMiddleware = async (ctx: Context, next: Next): Promise<void> => {
     return;
   }
   try {
-    const jwtToken = ctx.cookies.get('token');
+    const jwtToken = ctx.headers.jwt;
     if (!jwtToken) ctx.throw(401, 'login first');
     const userId: string = checkToken(jwtToken);
     ctx.state.user = { _id: userId };
