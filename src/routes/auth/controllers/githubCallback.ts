@@ -1,5 +1,5 @@
 import { Context, Next } from 'koa';
-import { UserDocument } from '../../../models/User';
+import { IUserDocument } from '../../../models/User';
 import { processGithubOAuth, getToken } from '../services/githubUtil';
 
 const HOUR: number = 1000 * 60 * 60;
@@ -15,7 +15,7 @@ export default async (ctx: Context, next: Next): Promise<void> => {
     return;
   }
   const accessCode: string = ctx.query.code;
-  const newUser: UserDocument = (await processGithubOAuth(accessCode)) as UserDocument;
+  const newUser: IUserDocument = (await processGithubOAuth(accessCode)) as IUserDocument;
   const jwtToken: string = getToken(newUser, tokenExpiration);
   if (jwtToken) {
     ctx.cookies.set('nickname', newUser.nickname, { httpOnly: false, maxAge: tokenExpiration });
