@@ -1,6 +1,7 @@
-import { Schema, Document, model, Model } from 'mongoose';
+import { Schema, Document, model, Model, Types } from 'mongoose';
 
 export interface IIssue {
+  projectId: Types.ObjectId;
   message: string;
   type: string;
   stack: { columnNo: string; lineNo: string; function: string; filename: string }[];
@@ -16,6 +17,7 @@ export interface IIssueModel extends Model<IIssueDocument> {
 }
 
 const issueSchema = new Schema({
+  projectId: Types.ObjectId,
   message: String,
   type: String,
   stack: { type: Schema.Types.Array, required: true },

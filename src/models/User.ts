@@ -7,19 +7,25 @@ export interface IUser {
   projects: string[];
 }
 
-export interface UserDocument extends IUser, Document {}
-export interface UserModel extends Model<UserDocument> {
-  build(attr: IUser): UserDocument;
+export interface IUserDocument extends IUser, Document {
+  addProject(projectId: string): void;
+  deleteProject(projectId: string): void;
+}
+export interface IUserModel extends Model<IUserDocument> {
+  build(attr: IUser): IUserDocument;
 }
 
 const userSchema = new Schema({
   uid: { type: Number, required: true },
   nickname: { type: String, required: true },
   email: { type: String },
-  projects: { type: Schema.Types.Array, required: true, default: [] },
+  projects: {
+    type: [{ type: Schema.Types.ObjectId, required: true, ref: 'Project' }],
+    default: [],
+  },
 });
 
-userSchema.statics.build = function buildUser(user: IUser): UserDocument {
+userSchema.statics.build = function buildUser(user: IUser): IUserDocument {
   return new this(user);
 };
 
@@ -31,6 +37,6 @@ userSchema.methods.deleteProject = function deleteProject(projectId: string) {
   this.projects.pull(projectId);
 };
 
-const User = model<UserDocument, UserModel>('User', userSchema);
+const User = model<IUserDocument, IUserModel>('User', userSchema);
 
 export default User;
