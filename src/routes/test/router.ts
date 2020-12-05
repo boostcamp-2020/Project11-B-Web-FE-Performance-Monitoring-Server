@@ -2,15 +2,15 @@ import Router from 'koa-router';
 
 import controllers from './controllers';
 
-export default async () => {
+export default async (): Promise<Record<string, unknown>> => {
   const router = new Router();
-  const controll: any = await controllers();
+  const controller: any = await controllers();
 
   //   get
-  router.get('/test', controll.getTest);
+  router.get('/test', controller.getTest);
 
   //   post
-  router.post('/test', controll.addTest);
+  router.post('/test', controller.addTest);
   //   put
   //   delete
   return router;
