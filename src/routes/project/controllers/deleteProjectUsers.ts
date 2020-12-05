@@ -2,7 +2,7 @@ import { Context } from 'koa';
 import Project from '../../../models/Project';
 
 interface IQuery {
-  id: number;
+  id: string;
 }
 
 interface IBody {
