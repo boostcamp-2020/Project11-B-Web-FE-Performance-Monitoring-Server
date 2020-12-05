@@ -11,6 +11,7 @@ export default async (): Promise<Record<string, unknown>> => {
 
   //   post
   router.post('/test', controller.addTest);
+  router.post('/test/project/:id', controller.addUsers);
   //   put
   //   delete
   return router;
