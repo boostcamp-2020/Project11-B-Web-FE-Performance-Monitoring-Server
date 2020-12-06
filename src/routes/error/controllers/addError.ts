@@ -17,6 +17,7 @@ export default async (ctx: Context, next: Next): Promise<void> => {
         message: newError.message,
         stack: newError.stack,
         type: newError.type,
+        isOpen: true,
       },
       {
         $push: { errorIds: res._id },

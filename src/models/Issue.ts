@@ -6,6 +6,7 @@ export interface IIssue {
   type: string;
   stack: { columnNo: string; lineNo: string; function: string; filename: string }[];
   errorIds: string[];
+  isOpen: boolean;
 }
 
 export interface IIssueDocument extends IIssue, Document {
@@ -22,6 +23,7 @@ const issueSchema = new Schema({
   type: String,
   stack: { type: Schema.Types.Array, required: true },
   errorIds: { type: Schema.Types.Array, required: true },
+  isOpen: { type: Schema.Types.Boolean, require: true },
 });
 
 issueSchema.statics.build = function buildIssue(issue: IIssue): IIssueDocument {
