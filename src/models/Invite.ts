@@ -1,17 +1,17 @@
 import { Schema, Document, model, Model } from 'mongoose';
 
-export interface InviteType {
+export interface IInvite {
   key: string;
   expire: number;
 }
 
-export interface InviteTypeModel extends InviteType, Document {}
+export interface IInviteModel extends IInvite, Document {}
 
-export interface InviteDocument extends InviteTypeModel, Document {}
+export interface InviteDocument extends IInviteModel, Document {}
 
-const InviteSchema = new Schema({
+const inviteSchema = new Schema({
   key: { type: String, required: true },
   expire: { type: Number, required: true },
 });
 
-export default model<InviteTypeModel>('Invite', InviteSchema);
+export default model<IInviteModel>('Invite', inviteSchema);

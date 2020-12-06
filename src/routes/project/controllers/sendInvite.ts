@@ -3,7 +3,7 @@ import { Context, Next } from 'koa';
 import CryptoJS from 'crypto-js';
 import sendMail from '../../../utils/sendMail';
 import inviteMemberTemplate from '../../../utils/mailTemplate/inviteMember';
-import Invite, { InviteType, InviteDocument } from '../../../models/Invite';
+import Invite, { IInvite, InviteDocument } from '../../../models/Invite';
 
 export default async (ctx: Context, next: Next): Promise<void> => {
   const { to, project, projectId } = ctx.request.body;
@@ -17,7 +17,7 @@ export default async (ctx: Context, next: Next): Promise<void> => {
       JSON.stringify(json),
       process.env.INVITE_SECRET_KEY as string,
     ).toString();
-    const newInvite: InviteType = {
+    const newInvite: IInvite = {
       key: ciphertext,
       expire: new Date().getTime() + 3600,
     };
