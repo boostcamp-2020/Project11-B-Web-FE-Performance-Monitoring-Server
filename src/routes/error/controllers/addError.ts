@@ -7,7 +7,7 @@ import Issue from '../../../models/Issue';
 export default async (ctx: Context, next: Next): Promise<void> => {
   const newError: IError = ctx.request.body;
   const { projectId } = ctx.params;
-  newError.meta.ip = ctx.header.host;
+  newError.meta.ip = ctx.request.ip;
   try {
     const newErrorDoc: IErrorDocument = Error.build(newError);
     const res = await newErrorDoc.save();
