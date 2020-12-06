@@ -28,7 +28,6 @@ export default async (ctx: Context, next: Next): Promise<void> => {
     );
     ctx.response.status = 200;
   } catch (e) {
-    console.log(e);
     ctx.throw(400, 'validation failed');
   }
 

@@ -1,6 +1,5 @@
 import { Context } from 'koa';
-import Project, { IProjectDocument } from '../../../models/Project';
-import User from '../../../models/User';
+import Project from '../../../models/Project';
 
 interface IQuery {
   id: number;

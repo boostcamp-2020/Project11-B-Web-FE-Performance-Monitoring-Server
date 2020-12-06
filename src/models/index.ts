@@ -10,6 +10,7 @@ const connect = async () => {
     useNewUrlParser: true,
     useFindAndModify: false,
   });
+  // eslint-disable-next-line no-console
   console.log('connected to database');
 };
 connect();
