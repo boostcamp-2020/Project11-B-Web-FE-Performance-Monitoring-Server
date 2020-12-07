@@ -18,6 +18,7 @@ export default async (): Promise<Record<string, unknown>> => {
   // put
   router.put('/project/name/:id', controller.updateProjectName);
   router.put('/project/:id/users', controller.deleteProjectUsers);
+  router.put('/project/:id/user', controller.updateProjectOwner);
 
   // delete
   router.delete('/project/:id', controller.deleteProject);
