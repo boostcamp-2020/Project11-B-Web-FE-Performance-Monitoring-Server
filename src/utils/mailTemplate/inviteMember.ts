@@ -17,7 +17,7 @@ const inviteMember = (
 
    <a type="button" href="${
      process.env.ADMIN_MAIN_URL
-   }/api/accept?key=${key}" style="cursor:pointer; color:white;  background-color: #311b92;  text-decoration: none; margin-top:10px; padding:15px 30px; font-size:20px;  border-radius:5px;"> 수락 </a>
+   }/accept?key=${key}" style="cursor:pointer; color:white;  background-color: #311b92;  text-decoration: none; margin-top:10px; padding:15px 30px; font-size:20px;  border-radius:5px;"> 수락 </a>
   
    </div>
     ${footer()}
