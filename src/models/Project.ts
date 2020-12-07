@@ -28,8 +28,12 @@ projectSchema.statics.build = function buildProject(project: IProject) {
   return new this(project);
 };
 
-projectSchema.methods.addUser = function addUser(userId: string) {
-  this.users.push(userId);
+projectSchema.methods.addUser = async function addUser(userId: string) {
+  const owner = await this.model('Project').findOne({ owner: Types.ObjectId(userId) });
+  if (owner !== null) return;
+  if (!this.users.includes(userId)) {
+    this.users.push(userId);
+  }
 };
 
 projectSchema.methods.deleteUser = function deleteUser(userId: string) {
