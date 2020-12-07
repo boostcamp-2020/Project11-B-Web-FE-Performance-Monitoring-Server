@@ -14,6 +14,11 @@ interface IBody {
 export default async (ctx: Context): Promise<void> => {
   const { id: projectId }: IParams = ctx.params;
   const { originUserId, targetUserId }: IBody = ctx.request.body;
+
+  if (ctx.state.user._id !== originUserId) {
+    throw Error();
+  }
+
   try {
     const targetUserCount = await User.countDocuments({ _id: targetUserId });
     const projectOwnerCount = await Project.countDocuments({ _id: projectId, owner: originUserId });
