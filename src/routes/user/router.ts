@@ -7,12 +7,7 @@ export default async (): Promise<Record<string, unknown>> => {
   const controller: any = await controllers();
 
   //   get
-  router.get('/test', controller.getTest);
+  router.get('/user/:id', controller.getUser);
 
-  //   post
-  router.post('/test', controller.addTest);
-  router.post('/test/project/:id', controller.addUsers);
-  //   put
-  //   delete
   return router;
 };

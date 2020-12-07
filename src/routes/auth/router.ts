@@ -6,11 +6,11 @@ import controllers from './controllers';
 
 export default async (): Promise<Record<string, unknown>> => {
   const router = new Router();
-  const controll: any = await controllers();
+  const controller: any = await controllers();
 
   //   get
-  router.get('/auth/github', controll.github);
-  router.get('/auth/github/callback', controll.githubCallback);
+  router.get('/auth/github', controller.github);
+  router.get('/auth/github/callback', controller.githubCallback);
 
   return router;
 };
