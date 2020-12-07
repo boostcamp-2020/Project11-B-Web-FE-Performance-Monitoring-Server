@@ -30,7 +30,9 @@ userSchema.statics.build = function buildUser(user: IUser): IUserDocument {
 };
 
 userSchema.methods.addProject = function addProject(projectId: string) {
-  this.projects.push(projectId);
+  if (!this.projects.includes(projectId)) {
+    this.projects.push(projectId);
+  }
 };
 
 userSchema.methods.deleteProject = function deleteProject(projectId: string) {
