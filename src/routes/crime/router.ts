@@ -6,7 +6,10 @@ export default async (): Promise<Record<string, unknown>> => {
   const router = new Router();
   const controller: any = await controllers();
 
-  //   post
+  // get
+  router.get('/crimes/:issueId', controller.getCrimes);
+
+  // post
   router.post('/crime/:projectId', controller.addCrime);
 
   /**
