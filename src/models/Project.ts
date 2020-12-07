@@ -22,6 +22,7 @@ const projectSchema = new Schema({
   description: { type: String },
   owner: { type: Schema.Types.ObjectId, required: true, ref: 'User' },
   users: [{ type: Schema.Types.ObjectId, required: true, ref: 'User' }],
+  isDeleted: { type: Boolean, required: true, default: false },
 });
 
 projectSchema.statics.build = function buildProject(project: IProject, session?: ClientSession) {

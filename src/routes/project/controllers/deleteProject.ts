@@ -8,8 +8,7 @@ interface IQuery {
 export default async (ctx: Context): Promise<void> => {
   const { id: projectId }: IQuery = ctx.params;
   try {
-    // await Project.findOne({ _id: projectId }).remove();
-    await Project.deleteOne({ _id: projectId });
+    await Project.update({ _id: projectId }, { isDeleted: true });
   } catch (e) {
     ctx.throw(400, 'internal server error');
   }
