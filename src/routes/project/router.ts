@@ -4,23 +4,23 @@ import controllers from './controllers';
 
 export default async (): Promise<Record<string, unknown>> => {
   const router = new Router();
-  const controll: any = await controllers();
+  const controller: any = await controllers();
 
   // get
-  router.get('/accept', controll.acceptInvite);
-  router.get('/project/:id', controll.getProject);
-  router.get('/projects', controll.getProjects);
+  router.get('/accept', controller.acceptInvite);
+  router.get('/project/:id', controller.getProject);
+  router.get('/projects', controller.getProjects);
 
   // post
-  router.post('/project', controll.addProject);
-  router.post('/invite', controll.sendInvite);
+  router.post('/project', controller.addProject);
+  router.post('/invite', controller.sendInvite);
 
   // put
-  router.put('/project/name/:id', controll.updateProjectName);
-  router.put('/project/:id/users', controll.deleteProjectUsers);
+  router.put('/project/name/:id', controller.updateProjectName);
+  router.put('/project/:id/users', controller.deleteProjectUsers);
 
   // delete
-  router.delete('/project/:id', controll.deleteProject);
+  router.delete('/project/:id', controller.deleteProject);
 
   return router;
 };
