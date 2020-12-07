@@ -11,7 +11,6 @@ export default async (ctx: Context, next: Next): Promise<void> => {
   try {
     const newCrimeDoc: ICrimeDocument = Crime.build(newCrime);
     const res = await newCrimeDoc.save();
-    console.log(newCrimeDoc);
     await Issue.findOneAndUpdate(
       {
         projectId: Types.ObjectId(projectId),
@@ -30,7 +29,6 @@ export default async (ctx: Context, next: Next): Promise<void> => {
     );
     ctx.response.status = 200;
   } catch (e) {
-    console.log(e);
     ctx.throw(400, 'validation failed');
   }
 
