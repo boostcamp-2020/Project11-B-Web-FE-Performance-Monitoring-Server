@@ -5,13 +5,13 @@ export interface IIssue {
   message: string;
   type: string;
   stack: { columnNo: string; lineNo: string; function: string; filename: string }[];
-  errorIds: string[];
+  crimeIds: string[];
   isOpen: boolean;
 }
 
 export interface IIssueDocument extends IIssue, Document {
-  addError(error: string): Promise<void>;
-  deleteError(error: string): Promise<void>;
+  addCrime(crime: string): Promise<void>;
+  deleteCrime(crime: string): Promise<void>;
 }
 export interface IIssueModel extends Model<IIssueDocument> {
   build(attr: IIssue): IIssueDocument;
@@ -22,7 +22,7 @@ const issueSchema = new Schema({
   message: String,
   type: String,
   stack: { type: Schema.Types.Array, required: true },
-  errorIds: { type: Schema.Types.Array, required: true },
+  crimeIds: [{ type: Schema.Types.ObjectId, required: true, ref: 'Crime' }],
   isOpen: { type: Schema.Types.Boolean, require: true },
 });
 
@@ -30,12 +30,12 @@ issueSchema.statics.build = function buildIssue(issue: IIssue): IIssueDocument {
   return new this(issue);
 };
 
-issueSchema.methods.addError = function addError(errorId: string) {
-  this.errorIds.push(errorId);
+issueSchema.methods.addCrime = function addCrime(crimeId: string) {
+  this.crimeIds.push(crimeId);
 };
 
-issueSchema.methods.deleteError = function deleteError(errorId: string) {
-  this.errorIds.pull(errorId);
+issueSchema.methods.deleteCrime = function deleteCrime(crimeId: string) {
+  this.crimeIds.pull(crimeId);
 };
 
 const Issue = model<IIssueDocument, IIssueModel>('Issue', issueSchema);

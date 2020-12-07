@@ -7,7 +7,7 @@ export default async (): Promise<Record<string, unknown>> => {
   const controller: any = await controllers();
 
   //   post
-  router.post('/error/:projectId', controller.addError);
+  router.post('/crime/:projectId', controller.addCrime);
 
   /**
    * @WARNING

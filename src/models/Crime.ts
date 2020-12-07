@@ -1,6 +1,6 @@
 import { Schema, Document, model, Model } from 'mongoose';
 
-export interface IError {
+export interface ICrime {
   message: string;
   type: string;
   stack: { columnNo: string; lineNo: string; function: string; filename: string }[];
@@ -23,12 +23,12 @@ export interface IError {
   };
 }
 
-export interface IErrorDocument extends IError, Document {}
-export interface IErrorModel extends Model<IErrorDocument> {
-  build(attr: IError): IErrorDocument;
+export interface ICrimeDocument extends ICrime, Document {}
+export interface ICrimeModel extends Model<ICrimeDocument> {
+  build(attr: ICrime): ICrimeDocument;
 }
 
-const ErrorSchema = new Schema({
+const CrimeSchema = new Schema({
   message: { type: String, required: true },
   type: { type: String, required: true },
   stack: [
@@ -58,10 +58,10 @@ const ErrorSchema = new Schema({
   },
 });
 
-ErrorSchema.statics.build = function buildError(Error: IError): IErrorDocument {
-  return new this(Error);
+CrimeSchema.statics.build = function buildCrime(Crime: ICrime): ICrimeDocument {
+  return new this(Crime);
 };
 
-const Error = model<IErrorDocument, IErrorModel>('Error', ErrorSchema);
+const Crime = model<ICrimeDocument, ICrimeModel>('Crime', CrimeSchema);
 
-export default Error;
+export default Crime;
