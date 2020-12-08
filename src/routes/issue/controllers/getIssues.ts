@@ -29,25 +29,25 @@ export default async (ctx: Context, next: Next): Promise<void> => {
       },
     },
 
-    { $addFields: { lastErrorId: { $arrayElemAt: ['$errorIds', 0] } } },
+    { $addFields: { lastCrimeId: { $arrayElemAt: ['$crimeIds', 0] } } },
     {
       $lookup: {
-        localField: 'lastErrorId',
-        // localField: 'errorIds',
-        from: 'errors',
+        localField: 'lastCrimeId',
+        // localField: 'crimeIds',
+        from: 'crimes',
         foreignField: '_id',
-        as: 'lastError',
+        as: 'lastCrime',
       },
     },
 
-    { $unwind: '$lastError' },
+    { $unwind: '$lastCrime' },
     {
       $lookup: {
-        // localField: 'lastErrorId',
-        localField: 'errorIds',
-        from: 'errors',
+        // localField: 'lastCrimeId',
+        localField: 'crimeIds',
+        from: 'crimes',
         foreignField: '_id',
-        as: 'totalError',
+        as: 'totalCrime',
       },
     },
 
@@ -59,9 +59,9 @@ export default async (ctx: Context, next: Next): Promise<void> => {
           type: '$type',
           message: '$message',
           stack: '$stack',
-          lastError: '$lastError',
+          lastCrime: '$lastCrime',
           project: '$project',
-          errorIds: '$errorIds',
+          crimeIds: '$crimeIds',
         },
         /**
          * @todo
@@ -69,7 +69,7 @@ export default async (ctx: Context, next: Next): Promise<void> => {
          * + count해서 반환하도록 수정
          */
 
-        _stat: { $addToSet: { userIps: '$totalError.meta.ip' } },
+        _stat: { $addToSet: { userIps: '$totalCrime.meta.ip' } },
       },
     },
     {

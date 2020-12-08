@@ -22,6 +22,7 @@ const projectSchema = new Schema({
   description: { type: String },
   owner: { type: Schema.Types.ObjectId, required: true, ref: 'User' },
   users: [{ type: Schema.Types.ObjectId, required: true, ref: 'User' }],
+  isDeleted: { type: Boolean, required: true, default: false },
 });
 
 projectSchema.statics.build = function buildProject(project: IProject, session?: ClientSession) {
@@ -29,8 +30,7 @@ projectSchema.statics.build = function buildProject(project: IProject, session?:
 };
 
 projectSchema.methods.addUser = async function addUser(userId: string) {
-  const owner = await this.model('Project').findOne({ owner: Types.ObjectId(userId) });
-  if (owner !== null) return;
+  if (this.owner.equals(Types.ObjectId(userId))) return;
   if (!this.users.includes(userId)) {
     this.users.push(userId);
   }

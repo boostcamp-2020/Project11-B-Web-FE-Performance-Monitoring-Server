@@ -23,7 +23,7 @@ export default async (ctx: Context): Promise<void> => {
   const userDocument = await User.findOne({ _id: user._id });
   if (!userDocument) ctx.throw(404, 'user not found');
   try {
-    let projects = await Project.find()
+    let projects = await Project.find({ isDeleted: { $ne: true } })
       .populate('owner')
       .populate('users')
       .where('_id')
