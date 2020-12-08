@@ -4,10 +4,10 @@ import controllers from './controllers';
 
 export default async (): Promise<Record<string, unknown>> => {
   const router = new Router();
-  const controll: any = await controllers();
+  const controller: any = await controllers();
 
   //   get
-  router.get('/stats', controll.getStats);
+  router.get('/stats', controller.getStats);
 
   return router;
 };

@@ -13,6 +13,7 @@ require('dotenv').config();
 const PORT = process.env.PORT || 4000;
 
 const app = new Koa();
+app.proxy = true;
 
 app.use(json());
 app.use(bodyParser());

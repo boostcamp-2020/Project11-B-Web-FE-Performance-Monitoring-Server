@@ -3,6 +3,7 @@ import { Context, Next } from 'koa';
 import CryptoJS from 'crypto-js';
 import Invite from '../../../models/Invite';
 import Project from '../../../models/Project';
+import User, { IUserDocument } from '../../../models/User';
 
 export default async (ctx: Context, next: Next): Promise<void> => {
   const { key } = ctx.query;
@@ -12,21 +13,26 @@ export default async (ctx: Context, next: Next): Promise<void> => {
     const bytes = CryptoJS.AES.decrypt(result.key, process.env.INVITE_SECRET_KEY as string);
     const decryptedData = JSON.parse(bytes.toString(CryptoJS.enc.Utf8));
     const project = await Project.findOne({ _id: decryptedData.projectId });
+    const user = (await User.findOne({ _id: ctx.state.user._id })) as IUserDocument;
     if (!project) {
-      ctx.throw('something error');
-      // return;
+      ctx.response.status = 404;
+      ctx.throw('project not found');
     }
-    project.addUser(ctx.state.user._id);
-    project.save();
+    try {
+      await project.addUser(ctx.state.user._id);
+      user.addProject(project._id);
+      user.save();
+      project.save();
+      ctx.response.status = 200;
+    } catch (error) {
+      ctx.response.status = 500;
+    }
     /**
      * @todo
      * project에 맞는 issue로 redirect
      */
   } else {
-    // ctx.throw('something error');
-    // ctx.redirect('/');
+    ctx.response.status = 500;
   }
-
-  ctx.redirect('/');
   await next();
 };
