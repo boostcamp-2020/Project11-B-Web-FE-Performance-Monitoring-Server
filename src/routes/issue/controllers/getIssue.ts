@@ -22,7 +22,6 @@ export default async (ctx: Context, next: Next): Promise<void> => {
     {
       $lookup: {
         localField: 'lastErrorId',
-        // localField: 'errorIds',
         from: 'errors',
         foreignField: '_id',
         as: 'lastError',
@@ -32,7 +31,6 @@ export default async (ctx: Context, next: Next): Promise<void> => {
     { $unwind: '$lastError' },
     {
       $lookup: {
-        // localField: 'lastErrorId',
         localField: 'errorIds',
         from: 'errors',
         foreignField: '_id',
@@ -55,8 +53,6 @@ export default async (ctx: Context, next: Next): Promise<void> => {
         _stat: { $addToSet: { userIps: '$totalError.meta.ip' } },
       },
     },
-
-    // metadata 배열 해제
   ]);
 
   ctx.body = result;
