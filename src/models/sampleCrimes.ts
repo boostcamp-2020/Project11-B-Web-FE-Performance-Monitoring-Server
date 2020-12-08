@@ -1,8 +1,8 @@
-import { IError } from './Error';
+import { ICrime } from './Crime';
 
 const HOUR_MILLISEC = 60 * 60 * 1000;
 
-const makeSampleIssueWithTime = (date: Date): IError => {
+const makeSampleIssueWithTime = (date: Date): ICrime => {
   const newSample = {
     sdk: {
       name: 'pan-opt',
@@ -89,8 +89,8 @@ const makeSampleIssueWithTime = (date: Date): IError => {
   return newSample;
 };
 
-const makeDaySampleIssues = (): IError[] => {
-  const issues: IError[] = [];
+const makeDaySampleIssues = (): ICrime[] => {
+  const issues: ICrime[] = [];
   const now = new Date();
   for (let i = 1; i <= 24; i += 1) {
     const errorNumPerHour: number = Math.floor(Math.random() * 20) + 1;
@@ -98,7 +98,7 @@ const makeDaySampleIssues = (): IError[] => {
       const newDate = new Date(
         now.getTime() - HOUR_MILLISEC * i + Math.floor(Math.random()) * HOUR_MILLISEC,
       );
-      const newIssue: IError = makeSampleIssueWithTime(newDate);
+      const newIssue: ICrime = makeSampleIssueWithTime(newDate);
       issues.push(newIssue);
     }
   }

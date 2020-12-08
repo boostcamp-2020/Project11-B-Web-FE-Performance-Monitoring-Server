@@ -1,26 +1,26 @@
 import { Context, Next } from 'koa';
 import { Types } from 'mongoose';
-import Error, { IError, IErrorDocument } from '../../../models/Error';
+import Crime, { ICrime, ICrimeDocument } from '../../../models/Crime';
 import Issue from '../../../models/Issue';
 // message, stack, type이 같은 경우 동일 에러 종류로 분류
 // project
 export default async (ctx: Context, next: Next): Promise<void> => {
-  const newError: IError = ctx.request.body;
+  const newCrime: ICrime = ctx.request.body;
   const { projectId } = ctx.params;
-  newError.meta.ip = ctx.request.ip;
+  newCrime.meta.ip = ctx.request.ip;
   try {
-    const newErrorDoc: IErrorDocument = Error.build(newError);
-    const res = await newErrorDoc.save();
+    const newCrimeDoc: ICrimeDocument = Crime.build(newCrime);
+    const res = await newCrimeDoc.save();
     await Issue.findOneAndUpdate(
       {
         projectId: Types.ObjectId(projectId),
-        message: newError.message,
-        stack: newError.stack,
-        type: newError.type,
+        message: newCrime.message,
+        stack: newCrime.stack,
+        type: newCrime.type,
         isOpen: true,
       },
       {
-        $push: { errorIds: res._id },
+        $push: { crimeIds: res._id },
       },
       {
         new: true,
@@ -29,7 +29,6 @@ export default async (ctx: Context, next: Next): Promise<void> => {
     );
     ctx.response.status = 200;
   } catch (e) {
-    console.log(e);
     ctx.throw(400, 'validation failed');
   }
 
