@@ -4,10 +4,8 @@ import Issue, { IIssueDocument } from '../../../models/Issue';
 
 export default async (ctx: Context, next: Next): Promise<void> => {
   const { issueId } = ctx.params;
-  // const result: IIssueDocument | null = await Issue.findOne({ _id: issueId });
   const [result]: any[] = await Issue.aggregate([
     { $match: { _id: Types.ObjectId(issueId) } },
-    // { $match: { projectId: Types.ObjectId(projectId) } },
     { $addFields: { stack: { $arrayElemAt: ['$stack', 0] } } },
     {
       $lookup: {
