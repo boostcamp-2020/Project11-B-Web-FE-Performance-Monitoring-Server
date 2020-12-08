@@ -8,6 +8,7 @@ export default async (): Promise<Record<string, unknown>> => {
 
   // get
   router.get('/crimes/:issueId', controller.getCrimes);
+  router.get('/crime/:crimeId', controller.getCrime);
 
   // post
   router.post('/crime/:projectId', controller.addCrime);
