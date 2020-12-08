@@ -1,7 +1,10 @@
 import { Context, Next } from 'koa';
+import { Types } from 'mongoose';
+
+import Issue from '../../../models/Issue';
 import Crime from '../../../models/Crime';
 import { getPeriodByMillisec } from '../services/statUtil';
-import { getSharesAggregate } from '../services/sharesUtil';
+import { getIssueSharesAggregate, getSharesAggregate } from '../services/sharesUtil';
 
 interface StatQuery {
   projectId: string | string[];
@@ -13,18 +16,26 @@ interface StatQuery {
 
 export default async (ctx: Context, next: Next): Promise<void> => {
   const params: StatQuery = ctx.query;
-  let { projectId: projectIds } = params;
+  const { projectId } = params;
+  let projectIds;
 
-  if (!Array.isArray(projectIds)) {
-    projectIds = [projectIds];
+  if (!Array.isArray(projectId)) {
+    projectIds = [projectId];
+  } else {
+    projectIds = projectId;
   }
+
+  const projectObjectIds = projectIds.map((id: string) => {
+    return Types.ObjectId(id);
+  });
 
   const period: number = getPeriodByMillisec(params.period);
   const start: Date = params.start ? new Date(params.start) : new Date(Date.now() - period);
   const end: Date = params.end ? new Date(params.end) : new Date();
 
+  const issues = await Issue.aggregate(getIssueSharesAggregate(projectObjectIds, start, end));
   const [metas] = await Crime.aggregate(getSharesAggregate(projectIds, start, end));
-  ctx.body = metas;
+  ctx.body = { issues, ...metas };
 
   await next();
 };
