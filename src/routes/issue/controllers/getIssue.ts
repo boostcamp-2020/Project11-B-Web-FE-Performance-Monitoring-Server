@@ -1,6 +1,6 @@
 import { Context, Next } from 'koa';
 import { Types } from 'mongoose';
-import Issue, { IIssueDocument } from '../../../models/Issue';
+import Issue from '../../../models/Issue';
 
 export default async (ctx: Context, next: Next): Promise<void> => {
   const { issueId } = ctx.params;
@@ -16,23 +16,23 @@ export default async (ctx: Context, next: Next): Promise<void> => {
       },
     },
 
-    { $addFields: { lastErrorId: { $arrayElemAt: ['$errorIds', 0] } } },
+    { $addFields: { lastCrimeId: { $arrayElemAt: ['$crimeIds', 0] } } },
     {
       $lookup: {
-        localField: 'lastErrorId',
-        from: 'errors',
+        localField: 'lastCrimeId',
+        from: 'crimes',
         foreignField: '_id',
-        as: 'lastError',
+        as: 'lastCrime',
       },
     },
 
-    { $unwind: '$lastError' },
+    { $unwind: '$lastCrime' },
     {
       $lookup: {
-        localField: 'errorIds',
-        from: 'errors',
+        localField: 'crimeIds',
+        from: 'crimes',
         foreignField: '_id',
-        as: 'totalError',
+        as: 'totalCrime',
       },
     },
 
@@ -44,11 +44,11 @@ export default async (ctx: Context, next: Next): Promise<void> => {
           type: '$type',
           message: '$message',
           stack: '$stack',
-          lastError: '$lastError',
+          lastCrime: '$lastCrime',
           project: '$project',
-          errorIds: '$errorIds',
+          crimeIds: '$crimeIds',
         },
-        _stat: { $addToSet: { userIps: '$totalError.meta.ip' } },
+        _stat: { $addToSet: { userIps: '$totalCrime.meta.ip' } },
       },
     },
   ]);
