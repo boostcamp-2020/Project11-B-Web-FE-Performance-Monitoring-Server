@@ -9,6 +9,7 @@ const getGroupAndCountAggregate = (field: string) => {
       },
     },
     { $project: { _id: 0, name: '$_id', count: 1 } },
+    { $sort: { count: -1 } },
   ];
 };
 
@@ -58,6 +59,7 @@ const getIssueSharesAggregate = (
     },
     { $unwind: '$crimeCount' },
     { $project: { _id: 1, type: 1, message: 1, count: '$crimeCount.value' } },
+    { $sort: { count: -1 } },
   ];
 };
 
