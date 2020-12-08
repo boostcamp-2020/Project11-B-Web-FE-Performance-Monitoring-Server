@@ -10,9 +10,13 @@ const getGroupAndCountAggregate = (field: string) => {
   ];
 };
 
-const getSharesAggregate = (start: Date, end: Date): Record<string, unknown>[] => {
+const getSharesAggregate = (
+  projectIds: string[],
+  start: Date,
+  end: Date,
+): Record<string, unknown>[] => {
   return [
-    { $match: { occuredAt: { $gte: start, $lte: end } } },
+    { $match: { occuredAt: { $gte: start, $lte: end }, projectId: { $in: projectIds } } },
     {
       $facet: {
         browsers: getGroupAndCountAggregate('$meta.browser.name'),
