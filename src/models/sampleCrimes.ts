@@ -22,6 +22,7 @@ const makeSampleIssueWithTime = (date: Date): ICrime => {
     },
     message: 'error maker made this',
     type: 'sample type',
+    projectId: 'sample project id',
     stack: [
       {
         columnNo: '9',
