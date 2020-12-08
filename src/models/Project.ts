@@ -1,4 +1,4 @@
-import { Types, Schema, Document, model, Model } from 'mongoose';
+import { Types, Schema, Document, model, Model, ClientSession } from 'mongoose';
 
 export interface IProject {
   name: string;
@@ -14,7 +14,7 @@ export interface IProjectDocument extends IProject, Document {
 }
 
 export interface IProjectModel extends Model<IProjectDocument> {
-  build(attr: IProject): IProjectDocument;
+  build(attr: IProject, session: ClientSession): IProjectDocument;
 }
 
 const projectSchema = new Schema({
@@ -24,8 +24,8 @@ const projectSchema = new Schema({
   users: [{ type: Schema.Types.ObjectId, required: true, ref: 'User' }],
 });
 
-projectSchema.statics.build = function buildProject(project: IProject) {
-  return new this(project);
+projectSchema.statics.build = function buildProject(project: IProject, session?: ClientSession) {
+  return new this(project, session);
 };
 
 projectSchema.methods.addUser = async function addUser(userId: string) {
