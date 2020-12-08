@@ -21,7 +21,7 @@ const getSharesAggregate = (
     { $match: { occuredAt: { $gte: start, $lte: end }, projectId: { $in: projectIds } } },
     {
       $facet: {
-        browsers: getGroupAndCountAggregate('$meta.browser.name'),
+        browser: getGroupAndCountAggregate('$meta.browser.name'),
         os: getGroupAndCountAggregate('$meta.os.name'),
         url: getGroupAndCountAggregate('$meta.url'),
       },

@@ -33,9 +33,9 @@ export default async (ctx: Context, next: Next): Promise<void> => {
   const start: Date = params.start ? new Date(params.start) : new Date(Date.now() - period);
   const end: Date = params.end ? new Date(params.end) : new Date();
 
-  const issues = await Issue.aggregate(getIssueSharesAggregate(projectObjectIds, start, end));
+  const issue = await Issue.aggregate(getIssueSharesAggregate(projectObjectIds, start, end));
   const [metas] = await Crime.aggregate(getSharesAggregate(projectIds, start, end));
-  ctx.body = { issues, ...metas };
+  ctx.body = { issue, ...metas };
 
   await next();
 };
