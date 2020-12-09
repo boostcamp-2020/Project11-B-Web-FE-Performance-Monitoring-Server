@@ -30,6 +30,15 @@ export default async (ctx: Context): Promise<void> => {
         _id: {
           year: { $year: '$date' },
           month: { $month: '$date' },
+          ip: '$ip',
+        },
+      },
+    },
+    {
+      $group: {
+        _id: {
+          year: '$_id.year',
+          month: '$_id.month',
         },
         count: { $sum: 1 },
       },
