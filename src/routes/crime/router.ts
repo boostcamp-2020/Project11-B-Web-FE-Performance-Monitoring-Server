@@ -12,6 +12,7 @@ export default async (): Promise<Record<string, unknown>> => {
 
   // post
   router.post('/crime/:projectId', controller.addCrime);
+  router.post('/crime/:projectId/visits', controller.addVisits);
 
   /**
    * @WARNING
