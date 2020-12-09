@@ -7,6 +7,7 @@ export default async (): Promise<Record<string, unknown>> => {
   const controller: any = await controllers();
 
   //   get
+  router.get('/stats/shares', controller.getShares);
   router.get('/stats', controller.getStats);
 
   return router;
