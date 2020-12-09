@@ -5,6 +5,7 @@ export interface ICrime {
   type: string;
   stack: { columnNo: string; lineNo: string; function: string; filename: string }[];
   occuredAt: Date;
+  projectId: string;
   sdk: {
     name: string;
     version: string;
@@ -40,6 +41,7 @@ const CrimeSchema = new Schema({
     },
   ],
   occuredAt: { type: Date, required: true },
+  projectId: { type: String, require: true },
   sdk: {
     name: { type: String, required: true },
     version: { type: String, required: true },

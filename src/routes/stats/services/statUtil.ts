@@ -1,6 +1,7 @@
 const MINUTE_MILLISEC = 1000 * 60;
 const HOUR_MILLISEC = MINUTE_MILLISEC * 60;
 const DAY_MILLISEC = HOUR_MILLISEC * 24;
+const WEEK_MILLISEC = DAY_MILLISEC * 7;
 const MONTH_MILLISEC = DAY_MILLISEC * 30; // 30일로 가정
 
 const getPeriodByMillisec = (periodString: string): number => {
@@ -8,6 +9,9 @@ const getPeriodByMillisec = (periodString: string): number => {
   const time: number = parseInt(periodString.slice(0, -1), 10);
   if (unit === 'M') {
     return time * MONTH_MILLISEC;
+  }
+  if (unit === 'w') {
+    return time * WEEK_MILLISEC;
   }
   if (unit === 'd') {
     return time * DAY_MILLISEC;
