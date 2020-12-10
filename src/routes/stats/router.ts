@@ -11,6 +11,7 @@ export default async (): Promise<Record<string, unknown>> => {
   router.get('/stats/shares', controller.getShares);
   router.get('/stats/interval', controller.getCountByInterval);
   router.get('/stats', controller.getStats);
+  router.get('/stats/issue/:issueId/shares', controller.getSharesByIssue);
 
   router.get('/countbyissue', controller.getIssueCount);
   router.get('/session', controller.getSession);
