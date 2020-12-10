@@ -78,4 +78,46 @@ const getMonthlyInYear = async (params: IMonthlyInYearParams): Promise<IVisitsDo
   return visitsByMonth;
 };
 
-export { getDailyInMonth, getMonthlyInYear };
+const fillDateCountsWithZero = (visitsByDate: IVisitsDocument[], year: number, month: number) => {
+  const lastDate = new Date(year, month + 1, 0).getDate();
+  let i = 0;
+  const filledVisitsByMonth = Array(lastDate)
+    .fill(0)
+    .map((_, index) => {
+      const targetDate = index + 1;
+      if (i < visitsByDate.length && targetDate === visitsByDate[i]._id.day) {
+        const targetData = visitsByDate[i];
+        i += 1;
+        return targetData;
+      }
+      const zeroData = {
+        _id: { year, month, day: targetDate },
+        count: 0,
+      };
+      return zeroData;
+    });
+  return filledVisitsByMonth;
+};
+
+const fillMonthCountsWithZero = (visitsByMonth: IVisitsDocument[], year: number) => {
+  const lastMonth = 12;
+  let i = 0;
+  const filledVisitsByMonth = Array(lastMonth)
+    .fill(0)
+    .map((_, index) => {
+      const targetMonth = index + 1;
+      if (i < visitsByMonth.length && targetMonth === visitsByMonth[i]._id.month) {
+        const targetData = visitsByMonth[i];
+        i += 1;
+        return targetData;
+      }
+      const zeroData = {
+        _id: { year, targetMonth },
+        count: 0,
+      };
+      return zeroData;
+    });
+  return filledVisitsByMonth;
+};
+
+export { getDailyInMonth, getMonthlyInYear, fillDateCountsWithZero, fillMonthCountsWithZero };

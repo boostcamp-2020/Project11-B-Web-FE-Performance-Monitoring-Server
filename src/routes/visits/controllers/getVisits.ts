@@ -1,5 +1,10 @@
 import { Context } from 'koa';
-import { getDailyInMonth, getMonthlyInYear } from '../services/visitsService';
+import {
+  getDailyInMonth,
+  getMonthlyInYear,
+  fillDateCountsWithZero,
+  fillMonthCountsWithZero,
+} from '../services/visitsService';
 
 interface IParams {
   projectId: string;
@@ -16,12 +21,14 @@ export default async (ctx: Context): Promise<void> => {
   const { type, year, month }: IQuery = ctx.query;
   if (type === 'daily') {
     const visitsByDate = await getDailyInMonth({ projectId, year, month });
-    ctx.response.body = visitsByDate;
+    const filledData = fillDateCountsWithZero(visitsByDate, year, month);
+    ctx.response.body = filledData;
     return;
   }
   if (type === 'monthly') {
     const visitsByMonth = await getMonthlyInYear({ projectId, year });
-    ctx.response.body = visitsByMonth;
+    const filledData = fillMonthCountsWithZero(visitsByMonth, year);
+    ctx.response.body = filledData;
     return;
   }
 
