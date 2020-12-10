@@ -27,12 +27,12 @@ const getDailyInMonth = async (params: IDailyInMonthParams): Promise<IVisitsDocu
         _id: {
           year: { $year: '$date' },
           month: { $month: '$date' },
-          day: { $dayOfMonth: '$date' },
+          date: { $dayOfMonth: '$date' },
         },
         count: { $sum: 1 },
       },
     },
-    { $sort: { '_id.day': 1 } },
+    { $sort: { '_id.date': 1 } },
   ]);
   return visitsByDate;
 };
@@ -85,13 +85,13 @@ const fillDateCountsWithZero = (visitsByDate: IVisitsDocument[], year: number, m
     .fill(0)
     .map((_, index) => {
       const targetDate = index + 1;
-      if (i < visitsByDate.length && targetDate === visitsByDate[i]._id.day) {
+      if (i < visitsByDate.length && targetDate === visitsByDate[i]._id.date) {
         const targetData = visitsByDate[i];
         i += 1;
         return targetData;
       }
       const zeroData = {
-        _id: { year, month, day: targetDate },
+        _id: { year, month, date: targetDate },
         count: 0,
       };
       return zeroData;
