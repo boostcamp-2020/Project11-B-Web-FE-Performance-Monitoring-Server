@@ -2,7 +2,7 @@ import { Types, Schema, Document, model, Model, ClientSession } from 'mongoose';
 
 export interface ISession {
   ip: string;
-  sessionBase: string;
+  sessionBase: number;
   prevLocation: string;
   presentLocation: string;
   prevTime: number;

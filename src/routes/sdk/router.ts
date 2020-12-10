@@ -9,8 +9,8 @@ export default async (): Promise<Record<string, unknown>> => {
   // get
   router.get('/sdk/test', controller.test);
 
-  router.post('/sdk/:projectId/session', controller.addSession);
   // post
 
+  router.post('/sdk/:projectId/session', controller.addSession);
   return router;
 };

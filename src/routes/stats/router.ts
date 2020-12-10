@@ -12,5 +12,6 @@ export default async (): Promise<Record<string, unknown>> => {
   router.get('/stats/issue/:issueId/crimes/count', controller.getCrimesCount);
 
   router.get('/countbyissue', controller.getIssueCount);
+  router.get('/session', controller.getSession);
   return router;
 };
