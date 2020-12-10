@@ -112,7 +112,7 @@ const fillMonthCountsWithZero = (visitsByMonth: IVisitsDocument[], year: number)
         return targetData;
       }
       const zeroData = {
-        _id: { year, targetMonth },
+        _id: { year, month: targetMonth },
         count: 0,
       };
       return zeroData;
