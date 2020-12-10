@@ -114,7 +114,7 @@ export const getDateByInterval = (
 ): { start: Date; end: Date; interval: number } => {
   const end = new Date();
   if (intervalType === IntervalType.HOUR) {
-    const MILLISECOND_OF_TWELVE_HOUR = 3600 * 24 * 1000;
+    const MILLISECOND_OF_TWELVE_HOUR = 3600 * 23 * 1000;
     const start = new Date(end.getTime() - MILLISECOND_OF_TWELVE_HOUR);
     const INTERVAL_ONE_HOUR = 60 * 1000 * 60;
     return { start, end, interval: INTERVAL_ONE_HOUR };
