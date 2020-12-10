@@ -9,6 +9,7 @@ export default async (): Promise<Record<string, unknown>> => {
   // get
   router.get('/sdk/:projectId/visits/month', controller.getMonthVisits);
   router.get('/sdk/:projectId/visits/year', controller.getYearVisits);
+  router.get('/sdk/:projectId/visits', controller.getVisits);
 
   // post
   router.post('/sdk/:projectId/visits', controller.addVisits);
