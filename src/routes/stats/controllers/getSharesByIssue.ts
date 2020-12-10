@@ -24,6 +24,7 @@ export default async (ctx: Context): Promise<void> => {
                   },
                   { $project: { _id: 0, name: '$_id', count: 1 } },
                   { $sort: { count: -1 } },
+                  { $limit: 7 },
                 ],
                 os: [
                   {
@@ -34,6 +35,7 @@ export default async (ctx: Context): Promise<void> => {
                   },
                   { $project: { _id: 0, name: '$_id', count: 1 } },
                   { $sort: { count: -1 } },
+                  { $limit: 7 },
                 ],
                 url: [
                   {
@@ -44,6 +46,7 @@ export default async (ctx: Context): Promise<void> => {
                   },
                   { $project: { _id: 0, name: '$_id', count: 1 } },
                   { $sort: { count: -1 } },
+                  { $limit: 7 },
                 ],
               },
             },
@@ -56,7 +59,6 @@ export default async (ctx: Context): Promise<void> => {
     ]);
     ctx.body = result;
   } catch (e) {
-    console.log(e);
     ctx.throw(500);
   }
 };
