@@ -13,5 +13,6 @@ export default async (): Promise<Record<string, unknown>> => {
   router.get('/stats', controller.getStats);
 
   router.get('/countbyissue', controller.getIssueCount);
+  router.get('/session', controller.getSession);
   return router;
 };

@@ -2,7 +2,11 @@ import { Context, Next } from 'koa';
 import checkToken from './checkToken';
 
 const authMiddleware = async (ctx: Context, next: Next): Promise<void> => {
-  const whiteUrls = ['/api/crime'];
+  /**
+   * @TODO
+   * whitelist에서 crime url 삭제
+   */
+  const whiteUrls = ['/api/crime', '/api/sdk'];
   if (
     /\/api\/auth\/github/g.test(ctx.url) ||
     whiteUrls.some((url) => ctx.originalUrl.includes(url))
