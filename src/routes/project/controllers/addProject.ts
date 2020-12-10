@@ -24,6 +24,7 @@ export default async (ctx: Context): Promise<void> => {
     ...req,
     owner: ctx.state.user._id,
     users: [],
+    sessions: [],
   };
   try {
     const newProjectDoc: IProjectDocument = Project.build(newProject, session);

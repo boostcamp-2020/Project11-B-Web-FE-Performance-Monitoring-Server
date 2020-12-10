@@ -10,5 +10,6 @@ export default async (): Promise<Record<string, unknown>> => {
   router.post('/sdk/:projectId/visits', controller.addVisits);
   router.post('/sdk/:projectId/crime', controller.addCrime);
 
+  router.post('/sdk/:projectId/session', controller.addSession);
   return router;
 };

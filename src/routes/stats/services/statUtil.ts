@@ -26,6 +26,7 @@ const getDefaultInterval = (period: string, interval: string | undefined): numbe
   const PERIOD_INTERVAL_MAP: { [key: string]: number } = {
     '1y': MONTH_MILLISEC,
     '1M': DAY_MILLISEC,
+    '1w': 3 * HOUR_MILLISEC,
     '1d': 5 * MINUTE_MILLISEC,
   };
   if (interval !== undefined) {
