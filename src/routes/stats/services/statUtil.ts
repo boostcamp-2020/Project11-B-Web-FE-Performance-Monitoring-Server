@@ -1,3 +1,5 @@
+import convertToArray from '../../../utils/convertToArray';
+
 const MINUTE_MILLISEC = 1000 * 60;
 const HOUR_MILLISEC = MINUTE_MILLISEC * 60;
 const DAY_MILLISEC = HOUR_MILLISEC * 24;
@@ -46,6 +48,23 @@ const getDefaultInterval = (period: string, interval: string | undefined): numbe
   return PERIOD_INTERVAL_MAP[period];
 };
 
+const getFilterAggregation = (field: string, arr: string[]) => {
+  const aggregation: any = {
+    $match: {},
+  };
+
+  aggregation.$match[field] = { $in: arr };
+
+  return aggregation;
+};
+
+const addFilter = (field: string, value: string | string[] | undefined, aggregate: any) => {
+  if (value === undefined) return aggregate;
+  const fieldValues = convertToArray(value);
+  const matcher = getFilterAggregation(field, fieldValues);
+  return [matcher, ...aggregate];
+};
+
 const getStatsAggregate = (interval: number, start: Date, end: Date): Record<string, unknown>[] => {
   return [
     // 1. 지금 시간부터 period를 뺀 시간까지의 데이터의 occuredAt을 추출한다.
@@ -83,4 +102,4 @@ const getStatsAggregate = (interval: number, start: Date, end: Date): Record<str
   ];
 };
 
-export { getPeriodByMillisec, getDefaultInterval, getStatsAggregate };
+export { getPeriodByMillisec, getDefaultInterval, getStatsAggregate, addFilter };
