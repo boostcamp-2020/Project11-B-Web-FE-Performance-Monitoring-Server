@@ -30,10 +30,8 @@ export const getCrimesCountAggregate = (
             $group: {
               _id: {
                 $subtract: [
-                  { $subtract: ['$occuredAt', new Date('1970-01-01')] },
-                  {
-                    $mod: [{ $subtract: ['$occuredAt', new Date('1970-01-01')] }, interval],
-                  },
+                  { $toLong: '$occuredAt' },
+                  { $mod: [{ $toLong: '$occuredAt' }, interval] },
                 ],
               },
               count: { $sum: 1 },
@@ -50,30 +48,53 @@ export const getCrimesCountAggregate = (
 interface ISetDefaultGroupParams {
   start: Date;
   interval: number;
+  intervalType: string;
   crimes: { _id: number; count: number }[];
 }
 
-// 분,초의 ms를 빼줌 (ex: 167143230000 - 230000)
-const getMillsecondsHour = (start: Date) => {
-  const startMillseconds = start.getTime();
+const getMillsecondsHour = (start: Date): number => {
   const [MILLSECONDS_MINUTES, MILLSECONDS_SECONDS] = [1000 * 60, 1000];
+  return (
+    start.getMinutes() * MILLSECONDS_MINUTES +
+    start.getSeconds() * MILLSECONDS_SECONDS +
+    start.getMilliseconds()
+  );
+};
+
+const getMillsecondsDay = (start: Date): number => {
+  const [MILLSECONDS_HOUR, MILLSECONDS_MINUTES, MILLSECONDS_SECONDS] = [
+    3600 * 1000,
+    1000 * 60,
+    1000,
+  ];
+  return (
+    start.getUTCHours() * MILLSECONDS_HOUR +
+    start.getMinutes() * MILLSECONDS_MINUTES +
+    start.getSeconds() * MILLSECONDS_SECONDS +
+    start.getMilliseconds()
+  );
+};
+
+// 시, 분,초의 ms를 빼줌 (ex: 167143230000 - 230000)
+const getMillseconds = (start: Date, intervalType: string) => {
+  const startMillseconds = start.getTime();
   const startHourMillseconds =
-    startMillseconds -
-    (start.getMinutes() * MILLSECONDS_MINUTES +
-      start.getSeconds() * MILLSECONDS_SECONDS +
-      start.getMilliseconds());
+    intervalType === 'hour'
+      ? startMillseconds - getMillsecondsHour(start)
+      : startMillseconds - getMillsecondsDay(start);
   return startHourMillseconds;
 };
 
 export const setDefaultGroup = (
   params: ISetDefaultGroupParams,
 ): { _id: number; count: number }[] => {
-  const { start, crimes, interval } = params;
-  const startMsOfHour = getMillsecondsHour(start);
-  const date: number[] = Array(24)
+  const { start, crimes, interval, intervalType } = params;
+  const dateInterval = intervalType === 'hour' ? 24 : 30;
+  const startMs = getMillseconds(start, intervalType);
+  const date: number[] = Array(dateInterval)
     .fill(0)
     .map((_, i) => {
-      return startMsOfHour + i * interval;
+      return startMs + i * interval;
     });
   const crimesCountByDate = date.map((time) => {
     const crimeIndex = crimes.findIndex((crime) => crime._id === time);
@@ -81,4 +102,25 @@ export const setDefaultGroup = (
     return { _id: time, count: 0 };
   });
   return crimesCountByDate;
+};
+
+enum IntervalType {
+  HOUR = 'hour',
+  DAY = 'day',
+}
+
+export const getDateByInterval = (
+  intervalType: string,
+): { start: Date; end: Date; interval: number } => {
+  const end = new Date();
+  if (intervalType === IntervalType.HOUR) {
+    const MILLISECOND_OF_TWELVE_HOUR = 3600 * 24 * 1000;
+    const start = new Date(end.getTime() - MILLISECOND_OF_TWELVE_HOUR);
+    const INTERVAL_ONE_HOUR = 60 * 1000 * 60;
+    return { start, end, interval: INTERVAL_ONE_HOUR };
+  }
+  const MILLISECOND_OF_THIRTY_DAY = 3600 * 24 * 1000 * 29;
+  const start = new Date(end.getTime() - MILLISECOND_OF_THIRTY_DAY);
+  const INTERVAL_ONE_DAY = 3600 * 1000 * 24;
+  return { start, end, interval: INTERVAL_ONE_DAY };
 };
