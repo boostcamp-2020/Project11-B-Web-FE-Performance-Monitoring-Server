@@ -3,38 +3,52 @@ import { Types } from 'mongoose';
 
 import Issue from '../../../models/Issue';
 import Crime from '../../../models/Crime';
-import { getPeriodByMillisec } from '../services/statUtil';
+import { getPeriodByMillisec, addFilter } from '../services/statUtil';
 import { getIssueSharesAggregate, getSharesAggregate } from '../services/sharesUtil';
+import convertToArray from '../../../utils/convertToArray';
 
 interface StatQuery {
   projectId: string | string[];
   type: string;
   period: string;
+  browser?: string | string[];
+  os?: string | string[];
+  url?: string | string[];
   start?: string;
   end?: string;
 }
 
 export default async (ctx: Context, next: Next): Promise<void> => {
   const params: StatQuery = ctx.query;
-  const { projectId } = params;
-  let projectIds;
+  const { projectId, browser, os, url } = params;
 
-  if (!Array.isArray(projectId)) {
-    projectIds = [projectId];
-  } else {
-    projectIds = projectId;
-  }
+  const projectIds = convertToArray(projectId);
 
   const projectObjectIds = projectIds.map((id: string) => {
     return Types.ObjectId(id);
   });
 
+  const filterInfo = [
+    { field: 'meta.browser.name', value: browser },
+    { field: 'meta.os.name', value: os },
+    { field: 'meta.url.name', value: url },
+  ];
+
+  const filterAggregate = filterInfo.reduce(
+    (acc, curr) => addFilter(curr.field, curr.value, acc),
+    [],
+  );
+
   const period: number = getPeriodByMillisec(params.period);
   const start: Date = params.start ? new Date(params.start) : new Date(Date.now() - period);
   const end: Date = params.end ? new Date(params.end) : new Date();
 
-  const issue = await Issue.aggregate(getIssueSharesAggregate(projectObjectIds, start, end));
-  const [metas] = await Crime.aggregate(getSharesAggregate(projectIds, start, end));
+  const issueAggregate = getIssueSharesAggregate(projectObjectIds, start, end, filterAggregate);
+  const metaAggregate = getSharesAggregate(projectIds, start, end);
+
+  const issue = await Issue.aggregate(issueAggregate);
+  const [metas] = await Crime.aggregate([...filterAggregate, ...metaAggregate]);
+
   ctx.body = { issue, ...metas };
 
   await next();

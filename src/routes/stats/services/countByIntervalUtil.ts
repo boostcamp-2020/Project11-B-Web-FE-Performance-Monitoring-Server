@@ -71,7 +71,7 @@ const fillTimeframes = (start: Date, end: Date, interval: number) => (
 ): ITimeframe[] => {
   const startms = floorByInterval(start, interval).getTime();
   const endms = floorByInterval(end, interval).getTime();
-  const timeframeCount = (endms - startms) / interval;
+  const timeframeCount = (endms - startms) / interval + 1;
   const getNthTime = (n: number) => new Date(startms + n * interval);
   const newTimeframes = Array(timeframeCount)
     .fill(0)

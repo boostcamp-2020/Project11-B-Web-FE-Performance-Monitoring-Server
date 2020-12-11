@@ -34,6 +34,7 @@ const getIssueSharesAggregate = (
   projectIds: Types.ObjectId[],
   start: Date,
   end: Date,
+  filters: any[],
 ): Record<string, unknown>[] => {
   return [
     { $match: { projectId: { $in: projectIds } } },
@@ -42,6 +43,7 @@ const getIssueSharesAggregate = (
         from: 'crimes',
         let: { crimeIds: '$crimeIds' },
         pipeline: [
+          ...filters,
           {
             $match: {
               $and: [
