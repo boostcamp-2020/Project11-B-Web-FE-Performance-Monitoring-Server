@@ -12,10 +12,6 @@ export default async (): Promise<Record<string, unknown>> => {
   router.get('/crime/:projectId/visits/month', controller.getMonthVisits);
   router.get('/crime/:projectId/visits/year', controller.getYearVisits);
 
-  // post
-  router.post('/crime/:projectId', controller.addCrime);
-  router.post('/crime/:projectId/visits', controller.addVisits);
-
   /**
    * @WARNING
    * @개발용
