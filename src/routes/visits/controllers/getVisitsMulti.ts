@@ -1,5 +1,4 @@
 import { Context } from 'koa';
-import { Types } from 'mongoose';
 import convertToArray from '../../../utils/convertToArray';
 import {
   getDailyInMonth,
@@ -15,7 +14,7 @@ export default async (ctx: Context): Promise<void> => {
     const filledDatas = await Promise.all(
       projectIds.map(async (targetProjectId) => {
         const visitsByDate = await getDailyInMonth({ targetProjectId, year, month });
-        const filledData = fillDateCountsWithZero(visitsByDate, targetProjectId, year, month);
+        const filledData = fillDateCountsWithZero({ visitsByDate, targetProjectId, year, month });
         return filledData;
       }),
     );
@@ -25,8 +24,8 @@ export default async (ctx: Context): Promise<void> => {
     const projectIds = convertToArray(projectId);
     const filledDatas = await Promise.all(
       projectIds.map(async (targetProjectId) => {
-        const visitsByDate = await getMonthlyInYear({ targetProjectId, year });
-        const filledData = fillMonthCountsWithZero(visitsByDate, targetProjectId, year);
+        const visitsByMonth = await getMonthlyInYear({ targetProjectId, year });
+        const filledData = fillMonthCountsWithZero({ visitsByMonth, targetProjectId, year });
         return filledData;
       }),
     );

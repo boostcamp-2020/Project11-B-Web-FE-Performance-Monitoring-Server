@@ -37,12 +37,15 @@ const getDailyInMonth = async (params: IDailyInMonthParams): Promise<IVisitsDocu
   return visitsByDate;
 };
 
-const fillDateCountsWithZero = (
-  visitsByDate: IVisitsDocument[],
-  projectId: string,
-  year: number,
-  month: number,
-) => {
+interface FillDateCountParams {
+  visitsByDate: IVisitsDocument[];
+  targetProjectId: string;
+  year: number;
+  month: number;
+}
+
+const fillDateCountsWithZero = (params: FillDateCountParams) => {
+  const { visitsByDate, targetProjectId: projectId, year, month } = params;
   const lastDate = new Date(year, month + 1, 0).getDate();
   let i = 0;
   const filledVisitsByMonth = Array(lastDate)
@@ -69,7 +72,7 @@ interface IMonthlyInYearParams {
 }
 
 const getMonthlyInYear = async (params: IMonthlyInYearParams): Promise<IVisitsDocument[]> => {
-  const { targetProjectId, year }: IMonthlyInYearParams = params;
+  const { targetProjectId, year } = params;
   const startDate = new Date(year, 0, 1);
   const endDate = new Date(year, 12, 0);
   const visitsByMonth = await Visits.aggregate([
@@ -106,11 +109,14 @@ const getMonthlyInYear = async (params: IMonthlyInYearParams): Promise<IVisitsDo
   return visitsByMonth;
 };
 
-const fillMonthCountsWithZero = (
-  visitsByMonth: IVisitsDocument[],
-  projectId: string,
-  year: number,
-) => {
+interface FillMonthCountParams {
+  visitsByMonth: IVisitsDocument[];
+  targetProjectId: string;
+  year: number;
+}
+
+const fillMonthCountsWithZero = (params: FillMonthCountParams) => {
+  const { visitsByMonth, targetProjectId: projectId, year }: FillMonthCountParams = params;
   const lastMonth = 12;
   let i = 0;
   const filledVisitsByMonth = Array(lastMonth)
