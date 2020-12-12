@@ -8,6 +8,7 @@ export default async (): Promise<Record<string, unknown>> => {
 
   // get
   router.get('/visits/:projectId', controller.getVisits);
+  router.get('/visits', controller.getVisitsMulti);
 
   return router;
 };
