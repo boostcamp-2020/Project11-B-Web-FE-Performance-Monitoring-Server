@@ -21,4 +21,15 @@ export default async (ctx: Context): Promise<void> => {
     );
     ctx.response.body = filledDatas;
   }
+  if (type === 'monthly') {
+    const projectIds = convertToArray(projectId);
+    const filledDatas = await Promise.all(
+      projectIds.map(async (targetProjectId) => {
+        const visitsByDate = await getMonthlyInYear({ targetProjectId, year });
+        const filledData = fillMonthCountsWithZero(visitsByDate, targetProjectId, year);
+        return filledData;
+      }),
+    );
+    ctx.response.body = filledDatas;
+  }
 };

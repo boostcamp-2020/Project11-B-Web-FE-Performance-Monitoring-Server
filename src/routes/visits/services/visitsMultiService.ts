@@ -37,49 +37,6 @@ const getDailyInMonth = async (params: IDailyInMonthParams): Promise<IVisitsDocu
   return visitsByDate;
 };
 
-interface IMonthlyInYearParams {
-  projectId: string;
-  year: number;
-}
-
-const getMonthlyInYear = async (params: IMonthlyInYearParams): Promise<IVisitsDocument[]> => {
-  const { projectId, year }: IMonthlyInYearParams = params;
-  const startDate = new Date(year, 0, 1);
-  const endDate = new Date(year, 12, 0);
-  const visitsByMonth = await Visits.aggregate([
-    {
-      $match: {
-        $and: [
-          { projectId: Types.ObjectId(projectId) },
-          { date: { $gte: startDate, $lte: endDate } },
-        ],
-      },
-    },
-    {
-      $group: {
-        _id: {
-          projectId: '$projectId',
-          year: { $year: '$date' },
-          month: { $month: '$date' },
-          ip: '$ip',
-        },
-      },
-    },
-    {
-      $group: {
-        _id: {
-          projectId: '$projectId',
-          year: '$_id.year',
-          month: '$_id.month',
-        },
-        count: { $sum: 1 },
-      },
-    },
-    { $sort: { '_id.month': 1 } },
-  ]);
-  return visitsByMonth;
-};
-
 const fillDateCountsWithZero = (
   visitsByDate: IVisitsDocument[],
   projectId: string,
@@ -106,7 +63,54 @@ const fillDateCountsWithZero = (
   return filledVisitsByMonth;
 };
 
-const fillMonthCountsWithZero = (visitsByMonth: IVisitsDocument[], year: number) => {
+interface IMonthlyInYearParams {
+  targetProjectId: string;
+  year: number;
+}
+
+const getMonthlyInYear = async (params: IMonthlyInYearParams): Promise<IVisitsDocument[]> => {
+  const { targetProjectId, year }: IMonthlyInYearParams = params;
+  const startDate = new Date(year, 0, 1);
+  const endDate = new Date(year, 12, 0);
+  const visitsByMonth = await Visits.aggregate([
+    {
+      $match: {
+        $and: [
+          { projectId: Types.ObjectId(targetProjectId) },
+          { date: { $gte: startDate, $lte: endDate } },
+        ],
+      },
+    },
+    {
+      $group: {
+        _id: {
+          projectId: '$projectId',
+          year: { $year: '$date' },
+          month: { $month: '$date' },
+          ip: '$ip',
+        },
+      },
+    },
+    {
+      $group: {
+        _id: {
+          projectId: '$_id.projectId',
+          year: '$_id.year',
+          month: '$_id.month',
+        },
+        count: { $sum: 1 },
+      },
+    },
+    { $sort: { '_id.month': 1 } },
+  ]);
+  return visitsByMonth;
+};
+
+const fillMonthCountsWithZero = (
+  visitsByMonth: IVisitsDocument[],
+  projectId: string,
+  year: number,
+) => {
   const lastMonth = 12;
   let i = 0;
   const filledVisitsByMonth = Array(lastMonth)
@@ -119,7 +123,7 @@ const fillMonthCountsWithZero = (visitsByMonth: IVisitsDocument[], year: number)
         return targetData;
       }
       const zeroData = {
-        _id: { year, month: targetMonth },
+        _id: { year, month: targetMonth, projectId },
         count: 0,
       };
       return zeroData;
