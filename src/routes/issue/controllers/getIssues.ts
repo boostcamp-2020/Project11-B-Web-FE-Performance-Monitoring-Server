@@ -20,9 +20,10 @@ export default async (ctx: Context, next: Next): Promise<void> => {
     { $addFields: { stack: { $arrayElemAt: ['$stack', 0] } } },
     {
       $lookup: {
-        localField: 'projectId',
         from: 'projects',
-        foreignField: '_id',
+        let: { id: '$projectId' },
+        pipeline: [{ $match: { $expr: { $eq: ['$_id', '$$id'] } } }, { $project: { name: 1 } }],
+
         as: 'project',
       },
     },
@@ -38,7 +39,6 @@ export default async (ctx: Context, next: Next): Promise<void> => {
     },
 
     { $unwind: '$lastCrime' },
-
     {
       $lookup: {
         localField: 'crimeIds',
@@ -47,25 +47,51 @@ export default async (ctx: Context, next: Next): Promise<void> => {
         as: 'totalCrime',
       },
     },
+    { $unwind: '$totalCrime' },
+
     {
       $group: {
         _id: {
           _id: '$_id',
-          meta: '$meta',
           type: '$type',
           message: '$message',
           stack: '$stack',
           lastCrime: '$lastCrime',
           project: '$project',
-          crimeIds: '$crimeIds',
         },
-        _stat: { $addToSet: { userIps: '$totalCrime.meta.ip' } },
+        crimeIds: { $addToSet: '$crimeIds' },
+        users: { $addToSet: '$totalCrime.meta.ip' },
       },
     },
-    { $addFields: { occuredAt: { $toDate: '$_id.lastCrime.occuredAt' } } },
+    { $unwind: '$crimeIds' },
+    {
+      $group: {
+        _id: '$_id._id',
+        type: { $addToSet: '$_id.type' },
+        message: { $addToSet: '$_id.message' },
+        stack: { $addToSet: '$_id.stack' },
+        project: { $addToSet: '$_id.project' },
+        crimeIds: { $addToSet: '$crimeIds' },
+        lastCrime: { $addToSet: '$_id.lastCrime' },
+        crimeCount: { $sum: { $size: '$crimeIds' } },
+        userCount: { $sum: { $size: '$users' } },
+      },
+    },
+    { $unwind: '$type' },
+    { $unwind: '$message' },
+    { $unwind: '$stack' },
+    { $unwind: '$project' },
+    { $unwind: '$project' },
+    { $unwind: '$crimeIds' },
+    { $unwind: '$lastCrime' },
+    { $addFields: { occuredAt: { $toDate: '$lastCrime.occuredAt' } } },
+
     {
       $sort: {
         occuredAt: -1,
+        crimeCount: 1,
+        userCount: 1,
+        _id: 1,
       },
     },
     {
@@ -79,7 +105,7 @@ export default async (ctx: Context, next: Next): Promise<void> => {
         data: [{ $skip: (page - 1) * CONTENT_PER_PAGE }, { $limit: CONTENT_PER_PAGE }],
       },
     },
-    { $unwind: '$metaData' }, // metadata 배열 해제
+    { $unwind: '$metaData' },
   ]);
   ctx.body = result;
 

@@ -9,14 +9,15 @@ export default async (ctx: Context, next: Next): Promise<void> => {
     { $addFields: { stack: { $arrayElemAt: ['$stack', 0] } } },
     {
       $lookup: {
-        localField: 'projectId',
         from: 'projects',
-        foreignField: '_id',
+        let: { id: '$projectId' },
+        pipeline: [{ $match: { $expr: { $eq: ['$_id', '$$id'] } } }, { $project: { name: 1 } }],
+
         as: 'project',
       },
     },
 
-    { $addFields: { lastCrimeId: { $arrayElemAt: ['$crimeIds', 0] } } },
+    { $addFields: { lastCrimeId: { $arrayElemAt: ['$crimeIds', -1] } } },
     {
       $lookup: {
         localField: 'lastCrimeId',
@@ -35,24 +36,45 @@ export default async (ctx: Context, next: Next): Promise<void> => {
         as: 'totalCrime',
       },
     },
+    { $unwind: '$totalCrime' },
 
     {
       $group: {
         _id: {
           _id: '$_id',
-          meta: '$meta',
           type: '$type',
           message: '$message',
           stack: '$stack',
           lastCrime: '$lastCrime',
           project: '$project',
-          crimeIds: '$crimeIds',
         },
-        _stat: { $addToSet: { userIps: '$totalCrime.meta.ip' } },
+        crimeIds: { $addToSet: '$crimeIds' },
+        users: { $addToSet: '$totalCrime.meta.ip' },
       },
     },
+    { $unwind: '$crimeIds' },
+    {
+      $group: {
+        _id: '$_id._id',
+        type: { $addToSet: '$_id.type' },
+        message: { $addToSet: '$_id.message' },
+        stack: { $addToSet: '$_id.stack' },
+        project: { $addToSet: '$_id.project' },
+        crimeIds: { $addToSet: '$crimeIds' },
+        lastCrime: { $addToSet: '$_id.lastCrime' },
+        crimeCount: { $sum: { $size: '$crimeIds' } },
+        userCount: { $sum: { $size: '$users' } },
+      },
+    },
+    { $unwind: '$type' },
+    { $unwind: '$message' },
+    { $unwind: '$stack' },
+    { $unwind: '$project' },
+    { $unwind: '$project' },
+    { $unwind: '$crimeIds' },
+    { $unwind: '$lastCrime' },
+    { $addFields: { occuredAt: { $toDate: '$lastCrime.occuredAt' } } },
   ]);
-
   ctx.body = result;
 
   await next();
