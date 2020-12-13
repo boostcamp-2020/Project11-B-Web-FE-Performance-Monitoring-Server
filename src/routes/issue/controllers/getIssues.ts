@@ -17,8 +17,6 @@ export default async (ctx: Context, next: Next): Promise<void> => {
 
   const [result]: IIssueDocument[] = await Issue.aggregate([
     { $match: { projectId: { $in: projectId } } },
-    // { $match: { projectId: Types.ObjectId(projectId) } },
-
     { $addFields: { stack: { $arrayElemAt: ['$stack', 0] } } },
     {
       $lookup: {
@@ -29,11 +27,10 @@ export default async (ctx: Context, next: Next): Promise<void> => {
       },
     },
 
-    { $addFields: { lastCrimeId: { $arrayElemAt: ['$crimeIds', 0] } } },
+    { $addFields: { lastCrimeId: { $arrayElemAt: ['$crimeIds', -1] } } },
     {
       $lookup: {
         localField: 'lastCrimeId',
-        // localField: 'crimeIds',
         from: 'crimes',
         foreignField: '_id',
         as: 'lastCrime',
@@ -41,16 +38,15 @@ export default async (ctx: Context, next: Next): Promise<void> => {
     },
 
     { $unwind: '$lastCrime' },
+
     {
       $lookup: {
-        // localField: 'lastCrimeId',
         localField: 'crimeIds',
         from: 'crimes',
         foreignField: '_id',
         as: 'totalCrime',
       },
     },
-
     {
       $group: {
         _id: {
@@ -63,15 +59,10 @@ export default async (ctx: Context, next: Next): Promise<void> => {
           project: '$project',
           crimeIds: '$crimeIds',
         },
-        /**
-         * @todo
-         * unique 적용되도록 수정해야함
-         * + count해서 반환하도록 수정
-         */
-
         _stat: { $addToSet: { userIps: '$totalCrime.meta.ip' } },
       },
     },
+    { $addFields: { occuredAt: { $toDate: '$_id.lastCrime.occuredAt' } } },
     {
       $sort: {
         occuredAt: -1,
@@ -90,7 +81,6 @@ export default async (ctx: Context, next: Next): Promise<void> => {
     },
     { $unwind: '$metaData' }, // metadata 배열 해제
   ]);
-
   ctx.body = result;
 
   await next();

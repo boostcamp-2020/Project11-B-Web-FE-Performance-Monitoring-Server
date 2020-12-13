@@ -53,6 +53,7 @@ export default async (ctx: Context): Promise<void> => {
             hour: { $hour: { $toDate: '$sessions.sessionBase' } },
           },
           avg_duration: { $avg: '$sessions.duration' },
+          sum_duration: { $sum: '$sessions.duration' },
           count: { $sum: 1 },
         },
       },
@@ -62,6 +63,7 @@ export default async (ctx: Context): Promise<void> => {
     const perDay = await Project.aggregate([
       { $match: { _id: { $in: projectId } } },
       { $unwind: '$sessions' },
+
       {
         $group: {
           _id: {
@@ -70,10 +72,26 @@ export default async (ctx: Context): Promise<void> => {
             day: { $dayOfMonth: { $toDate: '$sessions.sessionBase' } },
           },
           avg_duration: { $avg: '$sessions.duration' },
+          sum_duration: { $sum: '$sessions.duration' },
           count: { $sum: 1 },
         },
       },
-      { $sort: { count: -1 } },
+      {
+        $addFields: {
+          base: {
+            $toDate: {
+              $concat: [
+                { $toString: '$_id.year' },
+                '-',
+                { $toString: '$_id.month' },
+                '-',
+                { $toString: '$_id.day' },
+              ],
+            },
+          },
+        },
+      },
+      { $sort: { base: -1 } },
     ]);
 
     const perMonth = await Project.aggregate([
@@ -86,6 +104,7 @@ export default async (ctx: Context): Promise<void> => {
             month: { $month: { $toDate: '$sessions.sessionBase' } },
           },
           avg_duration: { $avg: '$sessions.duration' },
+          sum_duration: { $sum: '$sessions.duration' },
           count: { $sum: 1 },
         },
       },
