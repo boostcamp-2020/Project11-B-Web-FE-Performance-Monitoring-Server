@@ -45,11 +45,11 @@ export default async (ctx: Context, next: Next): Promise<void> => {
 
   const issueAggregate = getIssueSharesAggregate(projectObjectIds, start, end, filterAggregate);
   const metaAggregate = getSharesAggregate(projectIds, start, end);
-
-  const issue = await Issue.aggregate(issueAggregate);
-  const [metas] = await Crime.aggregate([...filterAggregate, ...metaAggregate]);
-
-  ctx.body = { issue, ...metas };
-
-  await next();
+  try {
+    const issue = await Issue.aggregate(issueAggregate);
+    const [metas] = await Crime.aggregate([...filterAggregate, ...metaAggregate]);
+    ctx.body = { issue, ...metas };
+  } catch (e) {
+    ctx.throw(400);
+  }
 };
