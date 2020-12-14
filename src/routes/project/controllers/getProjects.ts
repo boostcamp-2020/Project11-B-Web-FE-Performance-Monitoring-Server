@@ -20,9 +20,11 @@ interface IState {
 export default async (ctx: Context): Promise<void> => {
   const { userType = UserEnum.ALL }: IQuery = ctx.query;
   const { user } = ctx.state as IState;
-  const userDocument = await User.findOne({ _id: user._id });
-  if (!userDocument) ctx.throw(404, 'user not found');
   try {
+    const userDocument = await User.findOne({ _id: user._id });
+    if (userDocument === null) {
+      throw Error();
+    }
     let projects = await Project.find({ isDeleted: { $ne: true } })
       .populate('owner')
       .populate('users')
@@ -39,6 +41,6 @@ export default async (ctx: Context): Promise<void> => {
     ctx.response.status = 200;
     ctx.body = { projects };
   } catch (e) {
-    ctx.throw(500);
+    ctx.throw(400);
   }
 };

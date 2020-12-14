@@ -14,8 +14,8 @@ export default async (ctx: Context): Promise<void> => {
   const { name }: IBody = ctx.request.body;
   try {
     await Project.update({ _id: projectId }, { name });
+    ctx.status = 200;
   } catch (e) {
-    ctx.throw(400, 'internal server error');
+    ctx.throw(400);
   }
-  ctx.status = 200;
 };
