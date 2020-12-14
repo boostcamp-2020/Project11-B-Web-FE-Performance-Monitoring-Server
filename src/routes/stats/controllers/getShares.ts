@@ -1,4 +1,4 @@
-import { Context, Next } from 'koa';
+import { Context } from 'koa';
 import { Types } from 'mongoose';
 
 import Issue from '../../../models/Issue';
@@ -18,7 +18,7 @@ interface StatQuery {
   end?: string;
 }
 
-export default async (ctx: Context, next: Next): Promise<void> => {
+export default async (ctx: Context): Promise<void> => {
   const params: StatQuery = ctx.query;
   const { projectId, browser, os, url } = params;
 

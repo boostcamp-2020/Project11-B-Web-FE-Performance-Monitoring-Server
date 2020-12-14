@@ -36,6 +36,6 @@ export default async (ctx: Context): Promise<void> => {
   } catch (e) {
     await session.abortTransaction();
     session.endSession();
-    ctx.throw(400, 'validation failed');
+    ctx.throw(400);
   }
 };

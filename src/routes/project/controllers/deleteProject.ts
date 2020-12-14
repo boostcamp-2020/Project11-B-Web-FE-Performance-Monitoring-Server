@@ -11,6 +11,6 @@ export default async (ctx: Context): Promise<void> => {
     await Project.update({ _id: projectId }, { isDeleted: true });
     ctx.status = 200;
   } catch (e) {
-    ctx.throw(400, 'internal server error');
+    ctx.throw(400);
   }
 };

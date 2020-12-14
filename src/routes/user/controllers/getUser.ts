@@ -1,4 +1,4 @@
-import { Context, Next } from 'koa';
+import { Context } from 'koa';
 import User from '../../../models/User';
 
 interface IParams {
