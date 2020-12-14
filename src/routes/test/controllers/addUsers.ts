@@ -4,6 +4,7 @@
 
 import { Context } from 'koa';
 import Project, { IProjectDocument } from '../../../models/Project';
+import User from '../../../models/User';
 
 interface IQuery {
   id: string;
@@ -11,29 +12,21 @@ interface IQuery {
 
 export default async (ctx: Context): Promise<void> => {
   const { id: projectId }: IQuery = ctx.params;
+  const userIds = [
+    '5fcee46a17a95f43cee14761',
+    '5fcee63c17a95f43cee19c1e',
+    '5fcee75617a95f43cee1d32a',
+    '5fcf00d817a95f43cee61cb8',
+  ];
   try {
-    // await Project.updateOne(
-    //   { _id: projectId },
-    //   {
-    //     $push: {
-    //       users: {
-    //         $each: [
-    //           '5fc5d0f738d1839a9be86541',
-    //           '5fc7033438d1839a9b14bd79',
-    //           '5fc7205838d1839a9b191373',
-    //           '5fc728ba38d1839a9b1a65e2',
-    //         ],
-    //       },
-    //     },
-    //   },
-    //   { upsert: true },
-    // );
     const project = (await Project.findById(projectId)) as IProjectDocument;
-    await project.addUser('5fc5d0f738d1839a9be86541');
-    await project.addUser('5fc7033438d1839a9b14bd79');
-    await project.addUser('5fc7205838d1839a9b191373');
-    await project.addUser('5fc728ba38d1839a9b1a65e2');
-    project.save();
+    await Promise.all(
+      userIds.map(async (userId) => {
+        await project.addUser(userId);
+      }),
+    );
+    await User.updateMany({ _id: { $in: userIds } }, { $push: { projects: projectId } });
+    await project.save();
 
     ctx.status = 200;
   } catch (e) {
