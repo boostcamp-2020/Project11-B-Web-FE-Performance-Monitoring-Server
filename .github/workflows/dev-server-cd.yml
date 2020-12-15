@@ -43,4 +43,4 @@ jobs:
         run: ssh develop 'cd repos/Project11-B-Web-FE-Performance-Monitoring-Server && git checkout develop && git pull && npm i'
 
       - name: Reload PM2
-        run: ssh develop 'pm2 reload pan-dev-server'
+        run: ssh develop 'pm2 start ecosystem.config.js'
