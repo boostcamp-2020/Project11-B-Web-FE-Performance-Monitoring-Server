@@ -20,6 +20,6 @@ export default async (ctx: Context): Promise<void> => {
     await newVisitsDoc.save();
     ctx.response.status = 200;
   } catch (e) {
-    ctx.throw(400, 'internal error');
+    ctx.throw(400);
   }
 };

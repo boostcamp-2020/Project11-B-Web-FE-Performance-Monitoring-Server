@@ -22,16 +22,16 @@ app.use(cors());
 if (process.env.NODE_ENV === 'development') app.use(logger());
 app.use(apiRouter().routes());
 
-/**
- * @TODO
- * 에러 코드 분리
- */
 app.on('error', (err, ctx) => {
-  // 에러 코드
-  console.log(err.status);
-  // 에러 메시지
-  console.log(err.message);
-  // console.log('server error', err, ctx);
+  if (err.status === 400) {
+    ctx.status = 400;
+    return;
+  }
+  if (err.status === 401) {
+    ctx.status = 401;
+    return;
+  }
+  ctx.status = 500;
 });
 
 app.listen(PORT, () => {
