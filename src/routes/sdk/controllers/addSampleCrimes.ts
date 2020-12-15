@@ -1,12 +1,12 @@
 /* eslint-disable no-param-reassign */
-import { Context, Next } from 'koa';
+import { Context } from 'koa';
 import { ICrime } from '../../../models/Crime';
 import addCrime from '../services/addCrime';
 import makeSamples from '../services/makeSampleCrimes';
 
 const SAMPLE_COUNT = 1000;
 
-export default async (ctx: Context, next: Next): Promise<void> => {
+export default async (ctx: Context): Promise<void> => {
   const newCrimes: ICrime[] = makeSamples(SAMPLE_COUNT);
   const { projectId } = ctx.params;
   const userIp = ctx.request.ip;
@@ -22,7 +22,6 @@ export default async (ctx: Context, next: Next): Promise<void> => {
     );
     ctx.response.status = 200;
   } catch (e) {
-    ctx.throw(400, 'validation failed');
+    ctx.throw(400);
   }
-  await next();
 };
