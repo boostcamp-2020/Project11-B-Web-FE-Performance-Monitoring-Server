@@ -1,12 +1,11 @@
 import Koa from 'koa';
-
 import logger from 'koa-logger';
 import json from 'koa-json';
 import bodyParser from 'koa-bodyparser';
 import cors from '@koa/cors';
-
 import apiRouter from './routes/index';
 import './models';
+import { startAlertsLoop } from './utils/alert';
 
 require('dotenv').config();
 
@@ -37,4 +36,6 @@ app.on('error', (err, ctx) => {
 app.listen(PORT, () => {
   console.log(`Koa server listening on port ${PORT}`);
   console.log(`NODE_ENV : ${process.env.NODE_ENV}`);
+  // Alert 확인 루프
+  // startAlertsLoop();
 });
