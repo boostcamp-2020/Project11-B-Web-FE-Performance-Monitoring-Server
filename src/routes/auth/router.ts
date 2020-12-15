@@ -10,7 +10,6 @@ export default async (): Promise<Record<string, unknown>> => {
 
   //   get
   router.get('/auth/github', controller.github);
-  router.get('/auth/github/callback', controller.githubCallback);
 
   return router;
 };
