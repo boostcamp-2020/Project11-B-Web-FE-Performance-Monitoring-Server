@@ -1,10 +1,10 @@
-import { Context, Next } from 'koa';
+import { Context } from 'koa';
 import { Types } from 'mongoose';
 import Issue, { IIssueDocument } from '../../../models/Issue';
 import convertToArray from '../../../utils/convertToArray';
 import { addFilter } from '../services/statUtil';
 
-export default async (ctx: Context, next: Next): Promise<void> => {
+export default async (ctx: Context): Promise<void> => {
   const { projectId, browser, os, url } = ctx.query;
 
   const projectIds = convertToArray(projectId);
@@ -23,40 +23,41 @@ export default async (ctx: Context, next: Next): Promise<void> => {
     (acc, curr) => addFilter(curr.field, curr.value, acc),
     [],
   );
-
-  const result: IIssueDocument[] = await Issue.aggregate([
-    { $match: { projectId: { $in: projectObjectIds } } },
-    {
-      $lookup: {
-        localField: 'crimeIds',
-        from: 'crimes',
-        foreignField: '_id',
-        as: 'totalCrime',
+  try {
+    const result: IIssueDocument[] = await Issue.aggregate([
+      { $match: { projectId: { $in: projectObjectIds } } },
+      {
+        $lookup: {
+          localField: 'crimeIds',
+          from: 'crimes',
+          foreignField: '_id',
+          as: 'totalCrime',
+        },
       },
-    },
-    { $unwind: '$totalCrime' },
-    ...filterAggregate,
-    {
-      $group: {
-        _id: { _id: '$_id', message: '$message', type: '$type' },
-        crimeIds: { $addToSet: '$crimeIds' },
-        users: { $addToSet: '$totalCrime.meta.ip' },
+      { $unwind: '$totalCrime' },
+      ...filterAggregate,
+      {
+        $group: {
+          _id: { _id: '$_id', message: '$message', type: '$type' },
+          crimeIds: { $addToSet: '$crimeIds' },
+          users: { $addToSet: '$totalCrime.meta.ip' },
+        },
       },
-    },
-    { $unwind: '$crimeIds' },
-    {
-      $group: {
-        _id: '$_id._id',
-        message: { $addToSet: '$_id.message' },
-        type: { $addToSet: '$_id.type' },
-        crimeCount: { $sum: { $size: '$crimeIds' } },
-        userCount: { $sum: { $size: '$users' } },
+      { $unwind: '$crimeIds' },
+      {
+        $group: {
+          _id: '$_id._id',
+          message: { $addToSet: '$_id.message' },
+          type: { $addToSet: '$_id.type' },
+          crimeCount: { $sum: { $size: '$crimeIds' } },
+          userCount: { $sum: { $size: '$users' } },
+        },
       },
-    },
-    { $unwind: '$type' },
-    { $unwind: '$message' },
-  ]);
-  ctx.body = result;
-
-  await next();
+      { $unwind: '$type' },
+      { $unwind: '$message' },
+    ]);
+    ctx.body = result;
+  } catch (e) {
+    ctx.throw(400);
+  }
 };

@@ -1,13 +1,12 @@
-import { Context, Next } from 'koa';
+import { Context } from 'koa';
 
 import Project, { IProjectDocument } from '../../../models/Project';
 
-export default async (ctx: Context, next: Next): Promise<void> => {
+export default async (ctx: Context): Promise<void> => {
+  const params = ctx.request.body;
+  const { projectId } = ctx.params;
+  params.ip = ctx.request.ip;
   try {
-    const params = ctx.request.body;
-    const { projectId } = ctx.params;
-
-    params.ip = ctx.request.ip;
     const project = (await Project.findById(projectId)) as IProjectDocument;
 
     project.addSession(params);
@@ -15,8 +14,6 @@ export default async (ctx: Context, next: Next): Promise<void> => {
 
     ctx.response.status = 200;
   } catch (e) {
-    ctx.throw(400, 'validation failed');
+    ctx.throw(400);
   }
-
-  await next();
 };

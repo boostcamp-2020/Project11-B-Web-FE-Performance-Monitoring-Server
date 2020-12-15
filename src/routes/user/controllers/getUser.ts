@@ -1,4 +1,4 @@
-import { Context, Next } from 'koa';
+import { Context } from 'koa';
 import User from '../../../models/User';
 
 interface IParams {
@@ -12,6 +12,6 @@ export default async (ctx: Context): Promise<void> => {
     if (result === null) throw Error();
     ctx.body = result;
   } catch (e) {
-    ctx.throw(500);
+    ctx.throw(400);
   }
 };

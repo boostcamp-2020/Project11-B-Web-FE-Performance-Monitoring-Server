@@ -11,22 +11,20 @@ interface IBody {
 export default async (ctx: Context): Promise<void> => {
   const req: IBody = ctx.request.body;
   const session = await Mongoose.startSession();
-  session.startTransaction();
-  const user: IUserDocument | null = await User.findOne({ _id: ctx.state.user._id }, null, {
-    session,
-  });
-  if (!user) {
-    await session.abortTransaction();
-    session.endSession();
-    ctx.throw(404, 'user not found');
-  }
-  const newProject: IProject = {
-    ...req,
-    owner: ctx.state.user._id,
-    users: [],
-    sessions: [],
-  };
   try {
+    session.startTransaction();
+    const user: IUserDocument | null = await User.findOne({ _id: ctx.state.user._id }, null, {
+      session,
+    });
+    if (user === null) {
+      throw Error();
+    }
+    const newProject: IProject = {
+      ...req,
+      owner: ctx.state.user._id,
+      users: [],
+      sessions: [],
+    };
     const newProjectDoc: IProjectDocument = Project.build(newProject, session);
     await newProjectDoc.save();
     user.addProject(newProjectDoc._id);
@@ -38,6 +36,6 @@ export default async (ctx: Context): Promise<void> => {
   } catch (e) {
     await session.abortTransaction();
     session.endSession();
-    ctx.throw(400, 'validation failed');
+    ctx.throw(400);
   }
 };

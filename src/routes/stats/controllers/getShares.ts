@@ -1,4 +1,4 @@
-import { Context, Next } from 'koa';
+import { Context } from 'koa';
 import { Types } from 'mongoose';
 
 import Issue from '../../../models/Issue';
@@ -18,7 +18,7 @@ interface StatQuery {
   end?: string;
 }
 
-export default async (ctx: Context, next: Next): Promise<void> => {
+export default async (ctx: Context): Promise<void> => {
   const params: StatQuery = ctx.query;
   const { projectId, browser, os, url } = params;
 
@@ -45,11 +45,11 @@ export default async (ctx: Context, next: Next): Promise<void> => {
 
   const issueAggregate = getIssueSharesAggregate(projectObjectIds, start, end, filterAggregate);
   const metaAggregate = getSharesAggregate(projectIds, start, end);
-
-  const issue = await Issue.aggregate(issueAggregate);
-  const [metas] = await Crime.aggregate([...filterAggregate, ...metaAggregate]);
-
-  ctx.body = { issue, ...metas };
-
-  await next();
+  try {
+    const issue = await Issue.aggregate(issueAggregate);
+    const [metas] = await Crime.aggregate([...filterAggregate, ...metaAggregate]);
+    ctx.body = { issue, ...metas };
+  } catch (e) {
+    ctx.throw(400);
+  }
 };

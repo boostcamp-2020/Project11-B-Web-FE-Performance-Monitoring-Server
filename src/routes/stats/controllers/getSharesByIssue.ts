@@ -59,6 +59,6 @@ export default async (ctx: Context): Promise<void> => {
     ]);
     ctx.body = result;
   } catch (e) {
-    ctx.throw(500);
+    ctx.throw(400);
   }
 };

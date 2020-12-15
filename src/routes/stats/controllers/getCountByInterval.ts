@@ -1,4 +1,4 @@
-import { Context, Next } from 'koa';
+import { Context } from 'koa';
 
 import Crime from '../../../models/Crime';
 import { getPeriodByMillisec, getDefaultInterval, addFilter } from '../services/statUtil';
@@ -17,7 +17,7 @@ interface StatQuery {
   end?: string;
 }
 
-export default async (ctx: Context, next: Next): Promise<void> => {
+export default async (ctx: Context): Promise<void> => {
   const params: StatQuery = ctx.query;
   const { projectId, browser, os, url } = params;
 
@@ -42,18 +42,19 @@ export default async (ctx: Context, next: Next): Promise<void> => {
   const intervalAggregate = getCountByIntervalAggregate(projectIds, start, end, interval);
 
   const aggregation = [...filterAggregate, ...intervalAggregate];
+  try {
+    const [response] = await Crime.aggregate(aggregation);
 
-  const [response] = await Crime.aggregate(aggregation);
+    const filler = fillTimeframes(start, end, interval);
 
-  const filler = fillTimeframes(start, end, interval);
-
-  Object.keys(response).forEach((key) => {
-    response[key].map((_: any, index: number) => {
-      response[key][index].timeframes = filler(response[key][index].timeframes);
+    Object.keys(response).forEach((key) => {
+      response[key].map((_: any, index: number) => {
+        response[key][index].timeframes = filler(response[key][index].timeframes);
+      });
     });
-  });
 
-  ctx.body = response;
-
-  await next();
+    ctx.body = response;
+  } catch (e) {
+    ctx.throw(400);
+  }
 };
