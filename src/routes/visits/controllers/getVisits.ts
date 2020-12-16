@@ -7,15 +7,33 @@ import {
   fillMonthCountsWithZero,
 } from '../services/visitsService';
 
+interface IQuery {
+  projectId: string;
+  type: string;
+  year: string;
+  month: string;
+}
+
 export default async (ctx: Context): Promise<void> => {
-  const { projectId, type, year, month } = ctx.query;
+  const { projectId, type, year, month }: IQuery = ctx.query;
+  const yearNum = parseInt(year, 10);
+  const monthNum = parseInt(month, 10);
   try {
     if (type === 'daily') {
       const projectIds = convertToArray(projectId);
       const filledDatas = await Promise.all(
         projectIds.map(async (targetProjectId) => {
-          const visitsByDate = await getDailyInMonth({ targetProjectId, year, month });
-          const filledData = fillDateCountsWithZero({ visitsByDate, targetProjectId, year, month });
+          const visitsByDate = await getDailyInMonth({
+            targetProjectId,
+            year: yearNum,
+            month: monthNum,
+          });
+          const filledData = fillDateCountsWithZero({
+            visitsByDate,
+            targetProjectId,
+            year: yearNum,
+            month: monthNum,
+          });
           return filledData;
         }),
       );
@@ -25,8 +43,12 @@ export default async (ctx: Context): Promise<void> => {
       const projectIds = convertToArray(projectId);
       const filledDatas = await Promise.all(
         projectIds.map(async (targetProjectId) => {
-          const visitsByMonth = await getMonthlyInYear({ targetProjectId, year });
-          const filledData = fillMonthCountsWithZero({ visitsByMonth, targetProjectId, year });
+          const visitsByMonth = await getMonthlyInYear({ targetProjectId, year: yearNum });
+          const filledData = fillMonthCountsWithZero({
+            visitsByMonth,
+            targetProjectId,
+            year: yearNum,
+          });
           return filledData;
         }),
       );
