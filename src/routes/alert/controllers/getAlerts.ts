@@ -7,11 +7,11 @@ export default async (ctx: Context): Promise<void> => {
   const projectObjectIds = projects.map((proj: string) => Types.ObjectId(proj));
   try {
     const alerts = await Alert.aggregate([
-      { $match: { projectId: { $in: projectObjectIds } } },
+      { $match: { project: { $in: projectObjectIds } } },
       {
         $lookup: {
           from: 'projects',
-          localField: 'projectId',
+          localField: 'project',
           foreignField: '_id',
           as: 'project',
         },

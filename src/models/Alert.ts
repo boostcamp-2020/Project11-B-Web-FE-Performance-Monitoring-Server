@@ -1,7 +1,7 @@
 import { Schema, Document, model, Model } from 'mongoose';
 
 export interface IAlert {
-  projectId: string;
+  project: string;
   users: string[];
   sendedAt: Date;
   period?: string;
@@ -15,7 +15,7 @@ export interface IAlertModel extends Model<IAlertDocument> {
 }
 
 const AlertSchema = new Schema({
-  projectId: { type: Schema.Types.ObjectId, required: true, ref: 'Project' },
+  project: { type: Schema.Types.ObjectId, required: true, ref: 'Project' },
   users: {
     type: [{ type: Schema.Types.ObjectId, required: true, ref: 'User' }],
     default: [],

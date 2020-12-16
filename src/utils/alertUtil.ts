@@ -15,7 +15,7 @@ const alertListAggregate = () => {
     {
       $lookup: {
         from: 'projects',
-        localField: 'projectId',
+        localField: 'project',
         foreignField: '_id',
         as: 'project',
       },
@@ -76,7 +76,7 @@ const alertByCount = async (alert: any): Promise<void> => {
     sendEmailByCount(alertId, project, lastestIssueId, count, userList);
   } else {
     const [lastestIssue] = await Issue.aggregate([
-      { $match: { projectId: Types.ObjectId(project._id) } },
+      { $match: { project: Types.ObjectId(project._id) } },
       { $sort: { _id: -1 } },
       { $limit: 1 },
     ]);
@@ -106,7 +106,6 @@ const sendEmailByPeriod = async (
       { $sort: { _id: -1 } },
       { $limit: 10 },
     ]);
-
     // 최근에 보낸 시간 + period가 현재 시각보다 작은 경우 -> 이메일을 보냄
     // 최근 10개의 에러만 보내게 설정
     if (issues.length) {
