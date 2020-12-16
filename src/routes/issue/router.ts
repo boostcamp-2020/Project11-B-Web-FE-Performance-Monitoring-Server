@@ -10,8 +10,5 @@ export default async (): Promise<Record<string, unknown>> => {
   router.get('/issues', controller.getIssues);
   router.get('/issue/:issueId', controller.getIssue);
 
-  //   put
-  router.put('/issues/', controller.updateIssueIsOpen);
-
   return router;
 };
