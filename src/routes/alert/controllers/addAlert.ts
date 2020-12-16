@@ -21,7 +21,6 @@ export default async (ctx: Context): Promise<void> => {
       .save()
       .then((doc) => doc.populate('project').execPopulate())
       .then((doc) => doc.populate('users').execPopulate());
-    console.log(alert);
     ctx.body = alert;
     ctx.status = 200;
   } catch (e) {
