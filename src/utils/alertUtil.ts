@@ -108,8 +108,8 @@ const sendEmailByPeriod = async (
     ]);
 
     // 최근에 보낸 시간 + period가 현재 시각보다 작은 경우 -> 이메일을 보냄
+    // 최근 10개의 에러만 보내게 설정
     if (issues.length) {
-      console.log('period : send Email - 최근 에러 10개');
       await sendMail({
         to: userList,
         ...alertMailTemplateByPeriod(project.name, issues),
