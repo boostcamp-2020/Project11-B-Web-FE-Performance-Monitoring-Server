@@ -28,6 +28,10 @@ const getPeriodByMillisec = (periodString: string): number => {
   if (unit === 'm') {
     return time * MINUTE_MILLISEC;
   }
+
+  if (unit === 'A') {
+    return time * MINUTE_MILLISEC;
+  }
   throw new Error('Invalid period string');
 };
 
