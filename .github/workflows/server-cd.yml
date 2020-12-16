@@ -43,4 +43,4 @@ jobs:
         run: ssh master 'cd repos/Project11-B-Web-FE-Performance-Monitoring-Server && git checkout master && git pull && npm i'
 
       - name: Reload PM2
-        run: ssh master 'pm2 start ecosystem.config.js'
+        run: ssh master 'cd repos/Project11-B-Web-FE-Performance-Monitoring-Server && pm2 start ecosystem.config.js'
