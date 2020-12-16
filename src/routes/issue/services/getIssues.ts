@@ -2,7 +2,7 @@ import Issue, { IIssueDocument } from '../../../models/Issue';
 
 const CONTENT_PER_PAGE = 15;
 
-const getIssues = async (projectId: string, page: number): Promise<any> => {
+const getIssues = async (projectId: string, page: number, start: Date): Promise<any> => {
   const [result]: IIssueDocument[] = await Issue.aggregate([
     { $match: { projectId: { $in: projectId } } },
     { $addFields: { stack: { $arrayElemAt: ['$stack', 0] } } },
@@ -15,28 +15,22 @@ const getIssues = async (projectId: string, page: number): Promise<any> => {
         as: 'project',
       },
     },
-
-    { $addFields: { lastCrimeId: { $arrayElemAt: ['$crimeIds', -1] } } },
     {
       $lookup: {
-        localField: 'lastCrimeId',
         from: 'crimes',
-        foreignField: '_id',
-        as: 'lastCrime',
-      },
-    },
+        let: { crimeIds: '$crimeIds' },
+        pipeline: [
+          {
+            $match: {
+              $and: [{ $expr: { $in: ['$_id', '$$crimeIds'] } }, { occuredAt: { $gte: start } }],
+            },
+          },
+        ],
 
-    { $unwind: '$lastCrime' },
-    {
-      $lookup: {
-        localField: 'crimeIds',
-        from: 'crimes',
-        foreignField: '_id',
         as: 'totalCrime',
       },
     },
-    { $unwind: '$totalCrime' },
-
+    { $addFields: { lastCrime: { $arrayElemAt: ['$totalCrime', -1] } } },
     {
       $group: {
         _id: {
@@ -73,7 +67,6 @@ const getIssues = async (projectId: string, page: number): Promise<any> => {
     { $unwind: '$crimeIds' },
     { $unwind: '$lastCrime' },
     { $addFields: { occuredAt: { $toDate: '$lastCrime.occuredAt' } } },
-
     {
       $sort: {
         occuredAt: -1,
