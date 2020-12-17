@@ -2,7 +2,7 @@ import { Context } from 'koa';
 
 import Project, { IProjectDocument } from '../../../models/Project';
 
-const NINE_HOUR = 9 * 60 * 60 * 1000;
+const TIMEZONE_OFFSET = 9 * 60 * 60 * 1000;
 
 export default async (ctx: Context): Promise<void> => {
   const params = ctx.request.body;
@@ -10,8 +10,8 @@ export default async (ctx: Context): Promise<void> => {
   params.ip = ctx.request.ip;
   try {
     const project = (await Project.findById(projectId)) as IProjectDocument;
-    params.prevTime += NINE_HOUR;
-    params.presentTime += NINE_HOUR;
+    params.prevTime += TIMEZONE_OFFSET;
+    params.presentTime += TIMEZONE_OFFSET;
     project.addSession(params);
     project.save();
 
