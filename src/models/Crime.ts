@@ -36,10 +36,10 @@ const CrimeSchema = new Schema(
     type: { type: String, required: true },
     stack: [
       {
-        columnNo: { type: String, default: '' },
-        lineNo: { type: String, default: '' },
-        function: { type: String, default: '' },
-        filename: { type: String, default: '' },
+        columnNo: { type: String, default: 'unknown' },
+        lineNo: { type: String, default: 'unknown' },
+        function: { type: String, default: 'unknown' },
+        filename: { type: String, default: 'unknown' },
       },
     ],
     occuredAt: { type: Date, required: true },
