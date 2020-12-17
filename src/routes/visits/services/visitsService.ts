@@ -9,25 +9,19 @@ interface IDailyInMonthParams {
 
 const getDailyInMonth = async (params: IDailyInMonthParams): Promise<IVisitsDocument[]> => {
   const { targetProjectId, year, month }: IDailyInMonthParams = params;
-
-  const startDate = new Date(year, month - 1, 1);
-  const endDate = new Date(year, month, 0);
   const visitsByDate = await Visits.aggregate([
     {
       $match: {
-        $and: [
-          { projectId: Types.ObjectId(targetProjectId) },
-          { date: { $gte: startDate, $lte: endDate } },
-        ],
+        $and: [{ projectId: Types.ObjectId(targetProjectId) }, { year }, { month }],
       },
     },
     {
       $group: {
         _id: {
           projectId: '$projectId',
-          year: { $year: '$date' },
-          month: { $month: '$date' },
-          date: { $dayOfMonth: '$date' },
+          year: '$year',
+          month: '$month',
+          date: '$date',
         },
         count: { $sum: 1 },
       },
@@ -73,23 +67,18 @@ interface IMonthlyInYearParams {
 
 const getMonthlyInYear = async (params: IMonthlyInYearParams): Promise<IVisitsDocument[]> => {
   const { targetProjectId, year } = params;
-  const startDate = new Date(year, 0, 1);
-  const endDate = new Date(year, 12, 0);
   const visitsByMonth = await Visits.aggregate([
     {
       $match: {
-        $and: [
-          { projectId: Types.ObjectId(targetProjectId) },
-          { date: { $gte: startDate, $lte: endDate } },
-        ],
+        $and: [{ projectId: Types.ObjectId(targetProjectId) }, { year }],
       },
     },
     {
       $group: {
         _id: {
           projectId: '$projectId',
-          year: { $year: '$date' },
-          month: { $month: '$date' },
+          year: '$year',
+          month: '$month',
           ip: '$ip',
         },
       },
