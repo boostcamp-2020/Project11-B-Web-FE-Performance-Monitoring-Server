@@ -2,9 +2,12 @@
 import { Context } from 'koa';
 import { ICrime } from '../../../models/Crime';
 import addCrime from '../services/addCrime';
+import makeSamples from '../services/makeSampleCrimes';
+
+const SAMPLE_COUNT = 1000;
 
 export default async (ctx: Context): Promise<void> => {
-  const newCrimes: ICrime[] = ctx.request.body;
+  const newCrimes: ICrime[] = makeSamples(SAMPLE_COUNT);
   const { projectId } = ctx.params;
   const userIp = ctx.request.ip;
   newCrimes.map((newCrime) => {

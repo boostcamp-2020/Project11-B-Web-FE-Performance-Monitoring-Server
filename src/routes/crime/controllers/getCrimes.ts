@@ -2,7 +2,7 @@ import { Context } from 'koa';
 import { Types } from 'mongoose';
 import Issue from '../../../models/Issue';
 
-const CONTENT_PER_PAGE = 5;
+const CONTENT_PER_PAGE = 10;
 
 interface IParams {
   issueId: string;

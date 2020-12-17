@@ -1,8 +1,8 @@
-import { Context, Next } from 'koa';
+import { Context } from 'koa';
 import { ICrime } from '../../../models/Crime';
 import addCrime from '../services/addCrime';
 
-export default async (ctx: Context, next: Next): Promise<void> => {
+export default async (ctx: Context): Promise<void> => {
   const newCrime: ICrime = ctx.request.body;
   const { projectId } = ctx.params;
   newCrime.projectId = projectId;
@@ -11,8 +11,7 @@ export default async (ctx: Context, next: Next): Promise<void> => {
     await addCrime(newCrime, projectId);
     ctx.response.status = 200;
   } catch (e) {
-    ctx.throw(400, 'validation failed');
+    console.log(e);
+    ctx.throw(400);
   }
-
-  await next();
 };

@@ -112,6 +112,6 @@ export default async (ctx: Context): Promise<void> => {
     ]);
     ctx.body = { move, duration, perTime, perDay, perMonth };
   } catch (e) {
-    ctx.throw(500);
+    ctx.throw(400);
   }
 };

@@ -25,7 +25,7 @@ export interface ICrime {
 }
 
 // eslint-disable-next-line prettier/prettier
-export interface ICrimeDocument extends ICrime, Document { }
+export interface ICrimeDocument extends ICrime, Document {}
 export interface ICrimeModel extends Model<ICrimeDocument> {
   build(attr: ICrime): ICrimeDocument;
 }
@@ -36,10 +36,10 @@ const CrimeSchema = new Schema(
     type: { type: String, required: true },
     stack: [
       {
-        columnNo: { type: String, required: true },
-        lineNo: { type: String, required: true },
-        function: { type: String, required: true },
-        filename: { type: String, required: true },
+        columnNo: { type: String, default: 'unknown' },
+        lineNo: { type: String, default: 'unknown' },
+        function: { type: String, default: 'unknown' },
+        filename: { type: String, default: 'unknown' },
       },
     ],
     occuredAt: { type: Date, required: true },

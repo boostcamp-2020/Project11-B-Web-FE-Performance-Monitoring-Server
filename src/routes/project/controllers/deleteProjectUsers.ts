@@ -1,5 +1,7 @@
+import Mongoose from 'mongoose';
 import { Context } from 'koa';
 import Project from '../../../models/Project';
+import User from '../../../models/User';
 
 interface IQuery {
   id: string;
@@ -12,15 +14,28 @@ interface IBody {
 export default async (ctx: Context): Promise<void> => {
   const { id: projectId }: IQuery = ctx.params;
   const { userIds }: IBody = ctx.request.body;
+  const session = await Mongoose.startSession();
   try {
-    const project = await Project.findOne({ _id: projectId });
+    session.startTransaction();
+    const project = await Project.findOne({ _id: projectId }, null, { session });
+    await User.updateMany(
+      { _id: { $in: userIds } },
+      { $pull: { projects: projectId } },
+      {
+        session,
+      },
+    );
     if (project === null) {
-      ctx.throw(500);
+      throw Error();
     }
-    project.deleteUsers(userIds);
-    project.save();
+    await project.deleteUsers(userIds);
+    await project.save();
+    await session.commitTransaction();
+    session.endSession();
     ctx.status = 200;
   } catch (e) {
-    ctx.throw(400, 'internal server error');
+    await session.abortTransaction();
+    session.endSession();
+    ctx.throw(400);
   }
 };
