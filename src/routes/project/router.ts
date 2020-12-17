@@ -14,7 +14,7 @@ export default async (): Promise<Record<string, unknown>> => {
 
   // post
   router.post('/project', controller.addProject);
-  router.post('/invite', isProjectOwner, controller.sendInvite);
+  router.post('/invite/:id', isProjectOwner, controller.sendInvite);
 
   // put
   router.put('/project/:id/name', isProjectOwner, controller.updateProjectName);
