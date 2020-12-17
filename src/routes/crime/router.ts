@@ -12,13 +12,5 @@ export default async (): Promise<Record<string, unknown>> => {
   router.get('/crime/:projectId/visits/month', controller.getMonthVisits);
   router.get('/crime/:projectId/visits/year', controller.getYearVisits);
 
-  /**
-   * @WARNING
-   * @개발용
-   * 전체 데이터 삭제 API
-   */
-  router.post('/dev/issues', controller.devAddIssues);
-  router.delete('/dev/issues', controller.devDeleteIssues);
-
   return router;
 };

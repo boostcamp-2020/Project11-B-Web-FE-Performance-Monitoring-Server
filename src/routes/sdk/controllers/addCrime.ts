@@ -11,6 +11,7 @@ export default async (ctx: Context): Promise<void> => {
     await addCrime(newCrime, projectId);
     ctx.response.status = 200;
   } catch (e) {
+    console.log(e);
     ctx.throw(400);
   }
 };
