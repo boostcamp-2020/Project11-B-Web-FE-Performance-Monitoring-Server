@@ -2,12 +2,7 @@ import Issue, { IIssueDocument } from '../../../models/Issue';
 
 const CONTENT_PER_PAGE = 15;
 
-const getIssues = async (
-  projectId: string,
-  page: number,
-  start: Date,
-  tagQuery: [],
-): Promise<any> => {
+const getIssues = async (projectId: string, page: number, start: Date): Promise<any> => {
   const [result]: IIssueDocument[] = await Issue.aggregate([
     { $match: { projectId: { $in: projectId } } },
     { $addFields: { stack: { $arrayElemAt: ['$stack', 0] } } },
@@ -48,11 +43,9 @@ const getIssues = async (
         },
         crimeIds: { $addToSet: '$crimeIds' },
         users: { $addToSet: '$totalCrime.meta.ip' },
-        tags: { $addToSet: '$totalCrime.meta' },
       },
     },
     { $unwind: '$crimeIds' },
-    { $unwind: '$tags' },
     {
       $group: {
         _id: '$_id._id',
@@ -64,14 +57,8 @@ const getIssues = async (
         lastCrime: { $addToSet: '$_id.lastCrime' },
         crimeCount: { $sum: { $size: '$crimeIds' } },
         userCount: { $sum: { $size: '$users' } },
-        tags: { $addToSet: '$tags' },
       },
     },
-    { $unwind: '$tags' },
-    { $unwind: '$tags' },
-    { $addFields: { tagArr: { $objectToArray: '$tags' } } },
-
-    tagQuery ? { $match: { tagArr: { $all: tagQuery } } } : { $sort: { tags: 1 } },
     { $unwind: '$type' },
     { $unwind: '$message' },
     { $unwind: '$stack' },

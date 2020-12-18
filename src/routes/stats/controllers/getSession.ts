@@ -21,12 +21,6 @@ export default async (ctx: Context): Promise<void> => {
           avg_duration: { $avg: '$sessions.duration' },
           sum_duration: { $sum: '$sessions.duration' },
           count: { $sum: 1 },
-          users: { $addToSet: '$sessions.ip' },
-        },
-      },
-      {
-        $addFields: {
-          userCount: { $sum: { $size: '$users' } },
         },
       },
     ]);
@@ -44,6 +38,26 @@ export default async (ctx: Context): Promise<void> => {
           count: { $sum: 1 },
         },
       },
+      //   { $count: 'total' },
+    ]);
+
+    const perTime = await Project.aggregate([
+      { $match: { _id: { $in: projectId } } },
+      { $unwind: '$sessions' },
+      {
+        $group: {
+          _id: {
+            year: { $year: { $toDate: '$sessions.sessionBase' } },
+            month: { $month: { $toDate: '$sessions.sessionBase' } },
+            day: { $dayOfMonth: { $toDate: '$sessions.sessionBase' } },
+            hour: { $hour: { $toDate: '$sessions.sessionBase' } },
+          },
+          avg_duration: { $avg: '$sessions.duration' },
+          sum_duration: { $sum: '$sessions.duration' },
+          count: { $sum: 1 },
+        },
+      },
+      { $sort: { count: -1 } },
     ]);
 
     const perDay = await Project.aggregate([
@@ -59,14 +73,11 @@ export default async (ctx: Context): Promise<void> => {
           },
           avg_duration: { $avg: '$sessions.duration' },
           sum_duration: { $sum: '$sessions.duration' },
-          users: { $addToSet: '$sessions.ip' },
           count: { $sum: 1 },
         },
       },
-
       {
         $addFields: {
-          userCount: { $sum: { $size: '$users' } },
           base: {
             $toDate: {
               $concat: [
@@ -83,7 +94,23 @@ export default async (ctx: Context): Promise<void> => {
       { $sort: { base: -1 } },
     ]);
 
-    ctx.body = { move, duration, perDay };
+    const perMonth = await Project.aggregate([
+      { $match: { _id: { $in: projectId } } },
+      { $unwind: '$sessions' },
+      {
+        $group: {
+          _id: {
+            year: { $year: { $toDate: '$sessions.sessionBase' } },
+            month: { $month: { $toDate: '$sessions.sessionBase' } },
+          },
+          avg_duration: { $avg: '$sessions.duration' },
+          sum_duration: { $sum: '$sessions.duration' },
+          count: { $sum: 1 },
+        },
+      },
+      { $sort: { count: -1 } },
+    ]);
+    ctx.body = { move, duration, perTime, perDay, perMonth };
   } catch (e) {
     ctx.throw(400);
   }
