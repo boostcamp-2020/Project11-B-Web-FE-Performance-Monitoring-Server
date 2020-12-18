@@ -63,7 +63,7 @@ const sendEmailByCount = async (
   if (issues.length === count) {
     await sendMail({
       to: userList,
-      ...alertMailTemplateByCount(project.name, issues),
+      ...alertMailTemplateByCount(project.name, issues, count),
     });
     await Alert.updateOne({ _id: alertId }, { $set: { lastestIssueId: issues[0]._id } });
   }
@@ -111,7 +111,7 @@ const sendEmailByPeriod = async (
     if (issues.length) {
       await sendMail({
         to: userList,
-        ...alertMailTemplateByPeriod(project.name, issues),
+        ...alertMailTemplateByPeriod(project.name, issues, period),
       });
       await Alert.updateOne(
         { _id: alertId },
