@@ -37,5 +37,5 @@ app.listen(PORT, () => {
   console.log(`Koa server listening on port ${PORT}`);
   console.log(`NODE_ENV : ${process.env.NODE_ENV}`);
   // Alert 확인 루프
-  // startAlertsLoop();
+  startAlertsLoop();
 });

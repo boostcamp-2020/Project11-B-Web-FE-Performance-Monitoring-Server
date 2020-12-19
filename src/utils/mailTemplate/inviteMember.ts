@@ -1,27 +1,44 @@
-import header from './common/header';
-import footer from './common/footer';
+import template from './common/mail';
 
 const inviteMember = (
   team: string,
   key: string,
 ): { subject: string; text: string; html: string } => {
+  const content = `
+  <tr>
+    <td>
+      <p style="font-size: 18px">
+        ${team}으로부터 프로젝트 초대가 도착했습니다.
+      </p>
+      <p style="margin: 0">
+        아래의 버튼을 클릭하면 프로젝트에 멤버로서 참가할 수
+        있습니다.
+      </p>
+      <p style="margin: 0">
+        초대를 원하지 않거나 관련이 없으시다면 누르시지 않아도
+        됩니다. :)
+      </p>
+      <a
+        type="button"
+        href="${process.env.ADMIN_MAIN_URL}/accept?key=${key}"
+        style="
+          display: block;
+          cursor: pointer;
+          color: #005fff;
+          text-decoration: none;
+          font-size: 16px;
+          border-radius: 5px;
+          margin-top: 16px;
+        "
+      >
+        test4 프로젝트로부터 초대를 수락
+      </a>
+    </td>
+  </tr>`.trim();
   return {
     subject: `${team}으로부터 프로젝트 초대가 도착했습니다.`,
     text: '',
-    html: `
-    ${header()}
-   <div style="text-align:center; padding: 20px; border:2px solid black;">
-   <h2> ${team}으로부터 프로젝트 초대가 도착했습니다.</h2>
-
-   <h2>수락하시려면 아래 수락버튼을 클릭해 주세요</h2>
-
-   <a type="button" href="${
-     process.env.ADMIN_MAIN_URL
-   }/accept?key=${key}" style="cursor:pointer; color:white;  background-color: #311b92;  text-decoration: none; margin-top:10px; padding:15px 30px; font-size:20px;  border-radius:5px;"> 수락 </a>
-  
-   </div>
-    ${footer()}
-    `,
+    html: template(`${team}으로부터 프로젝트 초대가 도착했습니다.`, content),
   };
 };
 
