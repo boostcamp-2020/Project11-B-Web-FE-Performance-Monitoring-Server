@@ -52,22 +52,7 @@ const template = (title: string, content: string) =>
                       </h3>
                     </td>
                   </tr>
-                  <tr>
-                    <td
-                      style="
-                        color: #153643;
-                        font-family: Arial, sans-serif;
-                        font-size: 16px;
-                        line-height: 24px;
-                        padding: 20px 0 30px 0;
-                      "
-                    >
-                      ${content}
-                    </td>
-                  </tr>
-                  <tr>
-                    <td></td>
-                  </tr>
+                  ${content}
                 </table>
               </td>
             </tr>
