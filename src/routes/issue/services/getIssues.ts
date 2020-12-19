@@ -68,8 +68,7 @@ const getIssues = async (
       },
     },
     { $unwind: '$tags' },
-    { $unwind: '$tags' },
-    { $addFields: { tagArr: { $objectToArray: '$tags' } } },
+    { $addFields: { tagArr: { $objectToArray: '$tags[0]' } } },
 
     tagQuery ? { $match: { tagArr: { $all: tagQuery } } } : { $sort: { tags: 1 } },
     { $unwind: '$type' },
