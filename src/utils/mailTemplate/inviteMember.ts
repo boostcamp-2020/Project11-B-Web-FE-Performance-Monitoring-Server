@@ -31,7 +31,7 @@ const inviteMember = (
           margin-top: 16px;
         "
       >
-        test4 프로젝트로부터 초대를 수락
+        ${team} 프로젝트로부터 초대를 수락
       </a>
     </td>
   </tr>`.trim();
