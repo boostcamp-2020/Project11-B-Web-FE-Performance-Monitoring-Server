@@ -102,7 +102,7 @@ const template = (title: string, content: string) =>
                           <td>
                             <a href="http://panopticon.gq/">
                               <img
-                                src="https://s3.us-west-2.amazonaws.com/secure.notion-static.com/23a621f3-e22b-4104-9a4b-a5dee616d908/pan-logo.png?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=AKIAT73L2G45O3KS52Y5%2F20201218%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Date=20201218T045936Z&X-Amz-Expires=86400&X-Amz-Signature=24864f0c9b85311bc02badb2cef4baa1029dcd4bc0dc17c22ab31edaa15a828b&X-Amz-SignedHeaders=host&response-content-disposition=filename%20%3D%22pan-logo.png%22"
+                                src="https://firebasestorage.googleapis.com/v0/b/panopticon-7444c.appspot.com/o/3333.png?alt=media&token=3f3a5096-bcaf-415a-8d3f-db021ca65608"
                                 alt="Panopticon."
                                 width="150"
                                 height="38"
