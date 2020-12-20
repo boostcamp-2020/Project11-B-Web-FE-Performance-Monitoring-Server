@@ -4,7 +4,7 @@ import { ICrime } from '../../../models/Crime';
 import addCrime from '../services/addCrime';
 import makeSamples from '../services/makeSampleCrimes';
 
-const SAMPLE_COUNT = 1000;
+const SAMPLE_COUNT = 50;
 
 export default async (ctx: Context): Promise<void> => {
   const newCrimes: ICrime[] = makeSamples(SAMPLE_COUNT);
